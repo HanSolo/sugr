@@ -13,15 +13,17 @@ struct Provider: TimelineProvider {
     
     
     func placeholder(in context: Context) -> SugrEntry {
-        let glucoEntries : [GlucoEntry] = Helper.entriesFromUserDefaults()
-        let glucoEntry   : GlucoEntry   = glucoEntries.last!
-        return SugrEntry(date: Date(), value: glucoEntry.sgv, timestamp: glucoEntry.date, direction: glucoEntry.direction)
+        //let glucoEntries : [GlucoEntry] = Helper.entriesFromUserDefaults()
+        //let glucoEntry   : GlucoEntry   = glucoEntries.last!
+        //return SugrEntry(date: Date(), value: glucoEntry.sgv, timestamp: glucoEntry.date, direction: glucoEntry.direction)
+        return SugrEntry(date: Date(), value: Properties.instance.value!, timestamp: Properties.instance.date!, delta: Properties.instance.delta!, direction: Properties.instance.direction!)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SugrEntry) -> ()) {
-        let glucoEntries : [GlucoEntry] = Helper.entriesFromUserDefaults()
-        let glucoEntry   : GlucoEntry   = glucoEntries.last!
-        let entry        : SugrEntry    = SugrEntry(date: Date(), value: glucoEntry.sgv, timestamp: glucoEntry.date, direction: glucoEntry.direction)
+        //let glucoEntries : [GlucoEntry] = Helper.entriesFromUserDefaults()
+        //let glucoEntry   : GlucoEntry   = glucoEntries.last!
+        //let entry        : SugrEntry    = SugrEntry(date: Date(), value: glucoEntry.sgv, timestamp: glucoEntry.date, direction: glucoEntry.direction)
+        let entry        : SugrEntry    = SugrEntry(date: Date(), value: Properties.instance.value!, timestamp: Properties.instance.date!, delta: Properties.instance.delta!, direction: Properties.instance.direction!)
         completion(entry)
     }
 
@@ -31,9 +33,11 @@ struct Provider: TimelineProvider {
         
         for hourOffset in 0 ..< 2 {
             let entryDate    : Date         = Calendar.current.date(byAdding: .hour, value: hourOffset, to: now)!
-            let glucoEntries : [GlucoEntry] = Helper.entriesFromUserDefaults()
-            let glucoEntry   : GlucoEntry   = glucoEntries.last!
-            let entry        : SugrEntry    = SugrEntry(date: entryDate, value: glucoEntry.sgv, timestamp: glucoEntry.date, direction: glucoEntry.direction)
+            //let glucoEntries : [GlucoEntry] = Helper.entriesFromUserDefaults()
+            //let glucoEntry   : GlucoEntry   = glucoEntries.last!
+            //let entry        : SugrEntry    = SugrEntry(date: entryDate, value: glucoEntry.sgv, timestamp: glucoEntry.date, direction: glucoEntry.direction)
+            
+            let entry        : SugrEntry    = SugrEntry(date: entryDate, value: Properties.instance.value!, timestamp: Properties.instance.date!, delta: Properties.instance.delta!, direction: Properties.instance.direction!)
             entries.append(entry)
         }
 
@@ -46,6 +50,7 @@ struct SugrEntry: TimelineEntry {
     let date      : Date
     let value     : Double
     let timestamp : Double
+    let delta     : Double
     let direction : String
 }
 
@@ -65,7 +70,7 @@ struct SugrWidgetEntryView : View {
     
     var body: some View {
         let unitMgDl : Bool   = Properties.instance.unitMgDl!
-        let value    : Double = unitMgDl ? self.entry.value : Helper.mgToMmol(mgPerDl: self.entry.value)
+        let value    : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
         let arrow    : String = Constants.Direction.fromText(text: self.entry.direction).arrow
         let delta    : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
         
@@ -88,6 +93,8 @@ struct SugrWidgetEntryView : View {
                 Text("\(String(format: unitMgDl ? "%.0f" : "%.1f", value)) \(arrow)")
                     .font(Font.system(size: 36, weight: .bold, design: .rounded))
                 Text("\(self.formatter.string(from:Date(timeIntervalSince1970: self.entry.timestamp)))")
+                    .font(Font.system(size: 14, weight: .regular, design: .rounded))
+                Text("\(unitMgDl ? "mg/dl" : "mmol/L") \(delta > 0 ? "+" : "")\(String(format: unitMgDl ? "%.0f" : "%.1f", delta))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)

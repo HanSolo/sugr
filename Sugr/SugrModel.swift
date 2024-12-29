@@ -47,8 +47,11 @@ public class SugrModel: ObservableObject {
                 let lastEntry : GlucoEntry = last13Entries.dropLast().last!                
                 self.currentEntry = entry
                 self.lastEntry    = lastEntry
-                
-                Helper.entriesToUserDefaults(entries: [entry, lastEntry])
+                Properties.instance.value     = entry.sgv
+                Properties.instance.date      = entry.date
+                Properties.instance.direction = entry.direction
+                Properties.instance.delta     = entry.sgv - lastEntry.sgv
+                //Helper.entriesToUserDefaults(entries: [entry, lastEntry])
                 
                 WidgetCenter.shared.reloadAllTimelines()
             }

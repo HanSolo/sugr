@@ -33,7 +33,12 @@ class ProcessingOperation: Operation, @unchecked Sendable {
                     let entry     : GlucoEntry = entries[0]
                     let lastEntry : GlucoEntry = entries[1]
                     
-                    Helper.entriesToUserDefaults(entries: [entry, lastEntry])
+                    Properties.instance.value     = entry.sgv
+                    Properties.instance.date      = entry.date
+                    Properties.instance.direction = entry.direction
+                    Properties.instance.delta     = entry.sgv - lastEntry.sgv
+                    
+                    //Helper.entriesToUserDefaults(entries: [entry, lastEntry])
                     
                     WidgetCenter.shared.reloadAllTimelines()
                     debugPrint("background processing successful")
