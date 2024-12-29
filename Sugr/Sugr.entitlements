@@ -10,8 +10,18 @@
 	<array>
 		<string>CloudKit</string>
 	</array>
+	<key>com.apple.developer.messages.critical-messaging</key>
+	<true/>
+	<key>com.apple.developer.usernotifications.communication</key>
+	<true/>
+	<key>com.apple.developer.usernotifications.critical-alerts</key>
+	<true/>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.eu.hansolo.Sugr</string>
+	</array>
 	<key>com.apple.security.files.user-selected.read-only</key>
 	<true/>
 </dict>

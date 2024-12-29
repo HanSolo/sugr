@@ -6,8 +6,42 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4FB5330A2D2133E900A61B05 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB533092D2133E900A61B05 /* WidgetKit.framework */; };
+		4FB5330C2D2133E900A61B05 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB5330B2D2133E900A61B05 /* SwiftUI.framework */; };
+		4FB533192D2133EA00A61B05 /* SugrWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4FB533072D2133E900A61B05 /* SugrWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4FB533172D2133EA00A61B05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4F571C942D1C27CB00473F14 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4FB533062D2133E900A61B05;
+			remoteInfo = SugrWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4FB5331E2D2133EA00A61B05 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4FB533192D2133EA00A61B05 /* SugrWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4F571C9C2D1C27CB00473F14 /* Sugr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sugr.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FB533072D2133E900A61B05 /* SugrWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SugrWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FB533092D2133E900A61B05 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		4FB5330B2D2133E900A61B05 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		4FB5331F2D21342700A61B05 /* SugrWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SugrWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -18,6 +52,33 @@
 			);
 			target = 4F571C9B2D1C27CB00473F14 /* Sugr */;
 		};
+		4FB5331A2D2133EA00A61B05 /* Exceptions for "SugrWidget" folder in "SugrWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4FB533062D2133E900A61B05 /* SugrWidgetExtension */;
+		};
+		4FB533212D21349100A61B05 /* Exceptions for "Sugr" folder in "SugrWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Constants.swift,
+				"Extensions/Color+components.swift",
+				"Extensions/DateFormatter+ISO8691.swift",
+				SugrModel.swift,
+				Tools/GlucoEntry.swift,
+				Tools/Helper.swift,
+				Tools/NetworkMonitor.swift,
+				Tools/RestController.swift,
+				UserDefaults/ObjectSaveable.swift,
+				UserDefaults/ObjectSaveableError.swift,
+				UserDefaults/Observable.swift,
+				UserDefaults/Properties.swift,
+				UserDefaults/UserDefault.swift,
+				UserDefaults/UserDefaultsObservation.swift,
+			);
+			target = 4FB533062D2133E900A61B05 /* SugrWidgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -25,8 +86,17 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				4F571CAC2D1C27CD00473F14 /* Exceptions for "Sugr" folder in "Sugr" target */,
+				4FB533212D21349100A61B05 /* Exceptions for "Sugr" folder in "SugrWidgetExtension" target */,
 			);
 			path = Sugr;
+			sourceTree = "<group>";
+		};
+		4FB5330D2D2133E900A61B05 /* SugrWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4FB5331A2D2133EA00A61B05 /* Exceptions for "SugrWidget" folder in "SugrWidgetExtension" target */,
+			);
+			path = SugrWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -39,14 +109,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4FB533042D2133E900A61B05 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FB5330C2D2133E900A61B05 /* SwiftUI.framework in Frameworks */,
+				4FB5330A2D2133E900A61B05 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		4F571C932D1C27CB00473F14 = {
 			isa = PBXGroup;
 			children = (
-				4F571C9E2D1C27CB00473F14 /* Sugr */,
+				4FB5331F2D21342700A61B05 /* SugrWidgetExtension.entitlements */,
+				4FB533082D2133E900A61B05 /* Frameworks */,
 				4F571C9D2D1C27CB00473F14 /* Products */,
+				4F571C9E2D1C27CB00473F14 /* Sugr */,
+				4FB5330D2D2133E900A61B05 /* SugrWidget */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,8 +136,18 @@
 			isa = PBXGroup;
 			children = (
 				4F571C9C2D1C27CB00473F14 /* Sugr.app */,
+				4FB533072D2133E900A61B05 /* SugrWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4FB533082D2133E900A61B05 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4FB533092D2133E900A61B05 /* WidgetKit.framework */,
+				4FB5330B2D2133E900A61B05 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -68,10 +160,12 @@
 				4F571C982D1C27CB00473F14 /* Sources */,
 				4F571C992D1C27CB00473F14 /* Frameworks */,
 				4F571C9A2D1C27CB00473F14 /* Resources */,
+				4FB5331E2D2133EA00A61B05 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4FB533182D2133EA00A61B05 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				4F571C9E2D1C27CB00473F14 /* Sugr */,
@@ -82,6 +176,28 @@
 			productName = Sugr;
 			productReference = 4F571C9C2D1C27CB00473F14 /* Sugr.app */;
 			productType = "com.apple.product-type.application";
+		};
+		4FB533062D2133E900A61B05 /* SugrWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4FB5331B2D2133EA00A61B05 /* Build configuration list for PBXNativeTarget "SugrWidgetExtension" */;
+			buildPhases = (
+				4FB533032D2133E900A61B05 /* Sources */,
+				4FB533042D2133E900A61B05 /* Frameworks */,
+				4FB533052D2133E900A61B05 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4FB5330D2D2133E900A61B05 /* SugrWidget */,
+			);
+			name = SugrWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = SugrWidgetExtension;
+			productReference = 4FB533072D2133E900A61B05 /* SugrWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -94,6 +210,9 @@
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					4F571C9B2D1C27CB00473F14 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					4FB533062D2133E900A61B05 = {
 						CreatedOnToolsVersion = 16.2;
 					};
 				};
@@ -113,12 +232,20 @@
 			projectRoot = "";
 			targets = (
 				4F571C9B2D1C27CB00473F14 /* Sugr */,
+				4FB533062D2133E900A61B05 /* SugrWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4F571C9A2D1C27CB00473F14 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4FB533052D2133E900A61B05 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +262,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4FB533032D2133E900A61B05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4FB533182D2133EA00A61B05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4FB533062D2133E900A61B05 /* SugrWidgetExtension */;
+			targetProxy = 4FB533172D2133EA00A61B05 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4F571CAE2D1C27CD00473F14 /* Debug */ = {
@@ -151,21 +293,28 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sugr/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SugrMon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 18.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.hansolo.Sugr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -182,21 +331,28 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sugr/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SugrMon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 18.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.hansolo.Sugr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -319,6 +475,72 @@
 			};
 			name = Release;
 		};
+		4FB5331C2D2133EA00A61B05 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SugrWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L4A7549EHC;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SugrWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SugrWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 18.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.hansolo.Sugr.SugrWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		4FB5331D2D2133EA00A61B05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SugrWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L4A7549EHC;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SugrWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SugrWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 18.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.hansolo.Sugr.SugrWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -336,6 +558,15 @@
 			buildConfigurations = (
 				4F571CAE2D1C27CD00473F14 /* Debug */,
 				4F571CAF2D1C27CD00473F14 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4FB5331B2D2133EA00A61B05 /* Build configuration list for PBXNativeTarget "SugrWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FB5331C2D2133EA00A61B05 /* Debug */,
+				4FB5331D2D2133EA00A61B05 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
