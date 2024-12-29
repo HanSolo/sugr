@@ -69,16 +69,21 @@ struct SugrWidgetEntryView : View {
     }
     
     var body: some View {
-        let unitMgDl : Bool   = Properties.instance.unitMgDl!
-        let value    : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
-        let arrow    : String = Constants.Direction.fromText(text: self.entry.direction).arrow
-        let delta    : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
+        let unitMgDl      : Bool   = Properties.instance.unitMgDl!
+        let value         : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
+        let arrow         : String = Constants.Direction.fromText(text: self.entry.direction).arrow
+        let delta         : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
+        let date          : Double = Properties.instance.date!
+        let secondsDelta  : Double = Date.now.timeIntervalSince1970 - date
+        let timeSinceLast : String = Helper.secondsToDDHHMMString(seconds: secondsDelta)
         
         if family == .systemMedium {
             VStack {
                 Text("\(String(format: unitMgDl ? "%.0f" : "%.1f", value)) \(arrow)")
                     .font(Font.system(size: 48, weight: .bold, design: .rounded))
-                Text("\(self.formatter.string(from: Date(timeIntervalSince1970: self.entry.timestamp)))")
+                Text("\(unitMgDl ? "mg/dl" : "mmol/L") \(delta > 0 ? "+" : "")\(String(format: unitMgDl ? "%.0f" : "%.1f", delta))")
+                    .font(Font.system(size: 14, weight: .regular, design: .rounded))
+                Text("\(timeSinceLast)")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
@@ -92,9 +97,9 @@ struct SugrWidgetEntryView : View {
             VStack {
                 Text("\(String(format: unitMgDl ? "%.0f" : "%.1f", value)) \(arrow)")
                     .font(Font.system(size: 36, weight: .bold, design: .rounded))
-                Text("\(self.formatter.string(from:Date(timeIntervalSince1970: self.entry.timestamp)))")
-                    .font(Font.system(size: 14, weight: .regular, design: .rounded))
                 Text("\(unitMgDl ? "mg/dl" : "mmol/L") \(delta > 0 ? "+" : "")\(String(format: unitMgDl ? "%.0f" : "%.1f", delta))")
+                    .font(Font.system(size: 14, weight: .regular, design: .rounded))
+                Text("\(timeSinceLast)")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
@@ -108,11 +113,11 @@ struct SugrWidgetEntryView : View {
             VStack {
                 HStack(alignment: .center, spacing: .some(0)) {
                     Text("\(String(format: unitMgDl ? "%.0f" : "%.1f", value))")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .foregroundColor(.primary)
                     Text("\(arrow)")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .containerBackground(for: .widget) {
                             Color.clear
@@ -120,11 +125,27 @@ struct SugrWidgetEntryView : View {
                         .foregroundColor(.primary)
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, alignment: .center)
+                .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
                 Text("\(String(format: unitMgDl ? "%.0f" : "%.1f", delta)) \(unitMgDl ? "mg/dl" : "mmol/L")")
-                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .containerBackground(for: .widget) {
+                        Color.clear
+                    }
+                    .foregroundColor(.primary)
+                Text("\(timeSinceLast)")
+                    .font(Font.system(size: 10, weight: .regular, design: .rounded))
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .containerBackground(for: .widget) {
+                        Color.clear
+                    }
+                    .foregroundColor(.primary)
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, alignment: .center)
+            .containerBackground(for: .widget) {
+                Color.clear
+            }
+            .background(.clear)
             .padding()
         } else if family == .accessoryCircular {
             VStack(alignment: .center, spacing: .some(0)) {
@@ -144,6 +165,10 @@ struct SugrWidgetEntryView : View {
             .padding()
             .cornerRadius(100)
             .edgesIgnoringSafeArea(.all)
+            .containerBackground(for: .widget) {
+                Color.clear
+            }
+            .background(.clear)
         }
     }
 }
