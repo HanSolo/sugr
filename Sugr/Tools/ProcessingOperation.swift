@@ -40,7 +40,7 @@ class ProcessingOperation: Operation, @unchecked Sendable {
                     
                     //Helper.entriesToUserDefaults(entries: [entry, lastEntry])
                     
-                    WidgetCenter.shared.reloadAllTimelines()
+                    //WidgetCenter.shared.reloadAllTimelines()
                     debugPrint("background processing successful")
                 }
             }

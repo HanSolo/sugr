@@ -53,7 +53,7 @@ public class SugrModel: ObservableObject {
                 Properties.instance.delta     = entry.sgv - lastEntry.sgv
                 //Helper.entriesToUserDefaults(entries: [entry, lastEntry])
                 
-                WidgetCenter.shared.reloadAllTimelines()
+                //WidgetCenter.shared.reloadAllTimelines()
             }
         }
     }

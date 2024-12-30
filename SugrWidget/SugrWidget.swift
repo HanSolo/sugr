@@ -11,48 +11,33 @@ import SwiftUI
 struct Provider: TimelineProvider {
     @EnvironmentObject private var model : SugrModel
     
-    
     func placeholder(in context: Context) -> SugrEntry {
-        //let glucoEntries : [GlucoEntry] = Helper.entriesFromUserDefaults()
-        //let glucoEntry   : GlucoEntry   = glucoEntries.last!
-        //return SugrEntry(date: Date(), value: glucoEntry.sgv, timestamp: glucoEntry.date, direction: glucoEntry.direction)
-        return SugrEntry(date: Date(), value: Properties.instance.value!, timestamp: Properties.instance.date!, delta: Properties.instance.delta!, direction: Properties.instance.direction!)
+        return SugrEntry(date: Date())
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SugrEntry) -> ()) {
-        //let glucoEntries : [GlucoEntry] = Helper.entriesFromUserDefaults()
-        //let glucoEntry   : GlucoEntry   = glucoEntries.last!
-        //let entry        : SugrEntry    = SugrEntry(date: Date(), value: glucoEntry.sgv, timestamp: glucoEntry.date, direction: glucoEntry.direction)
-        let entry        : SugrEntry    = SugrEntry(date: Date(), value: Properties.instance.value!, timestamp: Properties.instance.date!, delta: Properties.instance.delta!, direction: Properties.instance.direction!)
+        let entry : SugrEntry = SugrEntry(date: Date())
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         var entries : [SugrEntry] = []
         let now     : Date        = Date()
-        
-        for hourOffset in 0 ..< 2 {
-            let entryDate    : Date         = Calendar.current.date(byAdding: .hour, value: hourOffset, to: now)!
-            //let glucoEntries : [GlucoEntry] = Helper.entriesFromUserDefaults()
-            //let glucoEntry   : GlucoEntry   = glucoEntries.last!
-            //let entry        : SugrEntry    = SugrEntry(date: entryDate, value: glucoEntry.sgv, timestamp: glucoEntry.date, direction: glucoEntry.direction)
-            
-            let entry        : SugrEntry    = SugrEntry(date: entryDate, value: Properties.instance.value!, timestamp: Properties.instance.date!, delta: Properties.instance.delta!, direction: Properties.instance.direction!)
+        for minuteOffset in stride(from: 0, to: 1440, by: 15) {
+            let entryDate : Date      = Calendar.current.date(byAdding: .minute, value: minuteOffset, to: now)!
+            let entry     : SugrEntry = SugrEntry(date: entryDate)
             entries.append(entry)
         }
-
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
     }
 }
 
+
 struct SugrEntry: TimelineEntry {
-    let date      : Date
-    let value     : Double
-    let timestamp : Double
-    let delta     : Double
-    let direction : String
+    let date : Date
 }
+
 
 struct SugrWidgetEntryView : View {
     @Environment(\.widgetFamily) private var family    
@@ -71,9 +56,10 @@ struct SugrWidgetEntryView : View {
     var body: some View {
         let unitMgDl      : Bool   = Properties.instance.unitMgDl!
         let value         : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
-        let arrow         : String = Constants.Direction.fromText(text: self.entry.direction).arrow
         let delta         : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
         let date          : Double = Properties.instance.date!
+        let direction     : String = Properties.instance.direction!
+        let arrow         : String = Constants.Direction.fromText(text: direction).arrow
         let secondsDelta  : Double = Date.now.timeIntervalSince1970 - date
         let timeSinceLast : String = Helper.secondsToDDHHMMString(seconds: secondsDelta)
         
@@ -87,9 +73,9 @@ struct SugrWidgetEntryView : View {
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-            .background(Helper.getColorForValue(value: self.entry.value))
+            .background(Helper.getColorForValue(value: value))
             .containerBackground(for: .widget) {
-                Helper.getColorForValue(value: self.entry.value)
+                Helper.getColorForValue(value: value)
             }
             .cornerRadius(5)
             .edgesIgnoringSafeArea(.all)
@@ -103,9 +89,9 @@ struct SugrWidgetEntryView : View {
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-            .background(Helper.getColorForValue(value: self.entry.value))
+            .background(Helper.getColorForValue(value: value))
             .containerBackground(for: .widget) {
-                Helper.getColorForValue(value: self.entry.value)
+                Helper.getColorForValue(value: value)
             }
             .cornerRadius(5)
             .edgesIgnoringSafeArea(.all)
@@ -172,6 +158,7 @@ struct SugrWidgetEntryView : View {
         }
     }
 }
+
 
 struct SugrWidget: Widget {
     @Environment(\.widgetFamily) private var family

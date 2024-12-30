@@ -37,7 +37,7 @@ class RestController {
     public static func getGlucoseData(url: String, apiSecret: String, token: String, useApiV2: Bool, numberOfEntries: Int, inBackground: Bool) async -> [GlucoEntry]? {
         if url.isEmpty { return [] }
         
-        let sessionConfig : URLSessionConfiguration = inBackground ? URLSessionConfiguration.background(withIdentifier: "fetchGlucose") : URLSessionConfiguration.default
+        let sessionConfig : URLSessionConfiguration = inBackground ? URLSessionConfiguration.background(withIdentifier: Constants.APP_PROCESSING_ID) : URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest  = 30.0
         sessionConfig.timeoutIntervalForResource = 30.0
         sessionConfig.isDiscretionary            = false

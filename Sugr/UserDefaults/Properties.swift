@@ -32,6 +32,10 @@ extension Key {
     static let lastValue                : Key = "lastValue"
     static let delta                    : Key = "delta"
     static let direction                : Key = "direction"
+    
+    static let last2DaysUpddate         : Key = "last2DaysUpddate"
+    static let last13DaysUpdate         : Key = "last13DaysUpdate"
+    static let last30DaysUpdate         : Key = "last30DaysUpdate"
 }
 
 
@@ -94,6 +98,15 @@ public struct Properties {
     @UserDefault(key: .direction, defaultValue: "")
     var direction: String?
     
+    
+    @UserDefault(key: .last2DaysUpddate, defaultValue: 0.0)
+    var last2DaysUpddate: Double?
+    
+    @UserDefault(key: .last13DaysUpdate, defaultValue: 0.0)
+    var last13DaysUpdate: Double?
+    
+    @UserDefault(key: .last30DaysUpdate, defaultValue: 0.0)
+    var last30DaysUpdate: Double?
 
     private init() {}
 }
