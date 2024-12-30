@@ -4,13 +4,13 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>eu.hansolo.Sugr.processing</string>
 		<string>eu.hansolo.Sugr.refresh</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>processing</string>
 		<string>remote-notification</string>
+		<string>fetch</string>
 		<string>fetch</string>
 	</array>
 </dict>

@@ -98,7 +98,7 @@ struct ContentView: View {
                     self.model.last8640Entries = entries.reversed()
                 }
             } else {
-                if Date.now.timeIntervalSince1970 - Properties.instance.last30DaysUpdate! > Constants.SECONDS_PER_DAY {
+                if now - Properties.instance.last30DaysUpdate! > Constants.SECONDS_PER_DAY {
                     Task {
                         let entries : [GlucoEntry] = await RestController.getGlucoseData(url: Properties.instance.nightscoutUrl!, apiSecret: Properties.instance.nightscoutApiSecret!, token: Properties.instance.nightscoutToken!, useApiV2: Properties.instance.nightscoutApiV2!, numberOfEntries: Constants.VALUES_PER_30_DAYS, inBackground: false)!
                         self.model.last8640Entries = entries.reversed()

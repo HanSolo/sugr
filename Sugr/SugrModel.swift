@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 import WidgetKit
 
-
+@MainActor
 public class SugrModel: ObservableObject {
     @Published var networkMonitor      : NetworkMonitor = NetworkMonitor()
     @Published var date                : Double         = Properties.instance.date! {

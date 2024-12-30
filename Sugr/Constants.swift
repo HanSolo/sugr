@@ -13,9 +13,7 @@ public class Constants {
     public static let APP_NAME                            : String = "Sugr"
     public static let APP_GROUP_ID                        : String = "group.eu.hansolo.Sugr"
     public static let APP_REFRESH_ID                      : String = "eu.hansolo.Sugr.refresh"
-    public static let APP_REFRESH_INTERVAL                : Double = 900
-    public static let APP_PROCESSING_ID                   : String = "eu.hansolo.Sugr.processing"
-    public static let APP_PROCESSING_INTERVAL             : Double = 900 // 15 min interval for background processing
+    public static let APP_REFRESH_INTERVAL                : Double = 300
     public static let OUTDATED_DURATION                   : Double = 420 // seconds before the attention sign will popup up
     public static let UPDATE_INTERVAL                     : Double = 150 // seconds before next entries will be fetched
     public static let CANVAS_REFRESH_INTERVAL             : Double = 1
