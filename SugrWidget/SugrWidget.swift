@@ -54,14 +54,12 @@ struct SugrWidgetEntryView : View {
     }
     
     var body: some View {
-        let unitMgDl      : Bool   = Properties.instance.unitMgDl!
-        let value         : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
-        let delta         : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
-        let date          : Double = Properties.instance.date!
-        let direction     : String = Properties.instance.direction!
-        let arrow         : String = Constants.Direction.fromText(text: direction).arrow
-        let secondsDelta  : Double = Date.now.timeIntervalSince1970 - date
-        let timeSinceLast : String = Helper.secondsToDDHHMMString(seconds: secondsDelta)
+        let unitMgDl  : Bool   = Properties.instance.unitMgDl!
+        let value     : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
+        let delta     : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
+        let date      : Double = Properties.instance.date!
+        let direction : String = Properties.instance.direction!
+        let arrow     : String = Constants.Direction.fromText(text: direction).arrow
         
         if family == .systemMedium {
             VStack {
@@ -69,7 +67,7 @@ struct SugrWidgetEntryView : View {
                     .font(Font.system(size: 48, weight: .bold, design: .rounded))
                 Text("\(unitMgDl ? "mg/dl" : "mmol/L") \(delta > 0 ? "+" : "")\(String(format: unitMgDl ? "%.0f" : "%.1f", delta))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
-                Text("\(timeSinceLast)")
+                Text("\(formatter.string(from: Date(timeIntervalSince1970: date)))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
@@ -85,7 +83,7 @@ struct SugrWidgetEntryView : View {
                     .font(Font.system(size: 36, weight: .bold, design: .rounded))
                 Text("\(unitMgDl ? "mg/dl" : "mmol/L") \(delta > 0 ? "+" : "")\(String(format: unitMgDl ? "%.0f" : "%.1f", delta))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
-                Text("\(timeSinceLast)")
+                Text("\(formatter.string(from: Date(timeIntervalSince1970: date)))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
@@ -119,7 +117,7 @@ struct SugrWidgetEntryView : View {
                         Color.clear
                     }
                     .foregroundColor(.primary)
-                Text("\(timeSinceLast)")
+                Text("\(formatter.string(from: Date(timeIntervalSince1970: date)))")
                     .font(Font.system(size: 10, weight: .regular, design: .rounded))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .containerBackground(for: .widget) {

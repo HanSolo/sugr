@@ -31,7 +31,7 @@ struct SugrApp: App {
             }
         }
         .backgroundTask(.appRefresh(Constants.APP_REFRESH_ID)) {
-            //debugPrint("App refresh started in background")
+            debugPrint("App refresh started in background")
             let entries : [GlucoEntry] = await fetchEntries(taskId: Constants.APP_REFRESH_ID)
             if Task.isCancelled {
                 //debugPrint("Task was cancelled")
@@ -48,7 +48,7 @@ struct SugrApp: App {
                     await MainActor.run {
                         self.model.last288Entries = entries
                         WidgetCenter.shared.reloadAllTimelines()
-                        //debugPrint("App refresh in background successful")
+                        debugPrint("App refresh in background successful")
                     }
                 } else {
                     //debugPrint("App refresh in background failed, empty entries")
@@ -64,7 +64,7 @@ struct SugrApp: App {
         let request = BGAppRefreshTaskRequest(identifier: Constants.APP_REFRESH_ID)
         request.earliestBeginDate = now.addingTimeInterval(Constants.APP_REFRESH_INTERVAL)
         try? BGTaskScheduler.shared.submit(request)
-        //debugPrint("Scheduled App refresh")
+        debugPrint("Scheduled App refresh")
     }
     
     func fetchEntries(taskId: String) async -> [GlucoEntry] {
