@@ -21,7 +21,7 @@ struct AverageView: View {
             Canvas(opaque: false, colorMode: .linear, rendersAsynchronously: false) { ctx, size in
                 let darkMode           : Bool     = self.colorScheme == .dark
                 let width              : Double   = size.width
-                let height             : Double   = size.height
+                //let height             : Double   = size.height
                 let dayOfWeekFontSize  : Double   = width * 0.02
                 let dayOfWeekFont      : Font     = Font.system(size: dayOfWeekFontSize, weight: .regular, design: .rounded)
                 let dayOfMonthFontSize : Double   = width * 0.02
@@ -31,7 +31,7 @@ struct AverageView: View {
                 let offsetY            : Double   = dayOfWeekFontSize * 1.25
                 let spacer             : Double   = width * 0.0099502488
                 let calendar           : Calendar = Calendar.current
-                
+                                
                 if !self.model.averagesLast30Days.isEmpty {
                     for n in 0..<30 {
                         let day        : Date   = Date.now - (TimeInterval(n) * Constants.SECONDS_PER_DAY)

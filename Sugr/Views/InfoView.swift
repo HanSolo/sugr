@@ -20,11 +20,11 @@ struct InfoView: View {
         GeometryReader { geometry in
             Canvas(opaque: false, colorMode: .linear, rendersAsynchronously: false) { ctx, size in
                 //let darkMode         : Bool            = self.colorScheme == .dark
-                let isLandscape      : Bool            = UIDevice.current.orientation.isLandscape
+                //let isLandscape      : Bool            = UIDevice.current.orientation.isLandscape
                 let width            : Double          = size.width
                 let height           : Double          = size.height
                 let minSize          : Double          = min(width, height)
-                let center           : CGPoint         = isLandscape ? CGPoint(x: width * 0.175, y: height * 0.5) : CGPoint(x: width * 0.5, y: height * 0.175)
+                let center           : CGPoint         = CGPoint(x: width * 0.5, y: height * 0.175)
                 let unitMgDl         : Bool            = Properties.instance.unitMgDl!
                 
                 let currentValue     : Double          = self.model.value
@@ -37,7 +37,7 @@ struct InfoView: View {
                 let foregroundFill   : Color           = .white
                 let valueFontSize    : Double          = minSize * 0.485
                 let valueFont        : Font            = Font.system(size: valueFontSize, weight: .bold, design: .rounded)
-                let unitFontSize     : Double          = isLandscape ? width * 0.04 : width * 0.06
+                let unitFontSize     : Double          = width * 0.06
                 let unitFont         : Font            = Font.system(size: unitFontSize, weight: .regular, design: .rounded)
                 let arrowFontSize    : Double          = minSize * 0.3
                 let arrowFont        : Font            = Font.system(size: arrowFontSize, weight: .bold, design: .rounded)
@@ -46,7 +46,9 @@ struct InfoView: View {
                 let datetimeFont     : Font            = Font.system(size: datetimeFontSize, weight: .regular, design: .rounded)
                 let infoFontSize     : Double          = minSize * 0.065
                 let infoFont         : Font            = Font.system(size: infoFontSize, weight: .medium, design: .rounded)
-                                                
+                //let offlineFontSize  : Double          = minSize * 0.05
+                //let offlineFont      : Font            = Font.system(size: offlineFontSize, weight: .regular, design: .rounded)
+                                                       
                 var valueRect : Path = Path()
                 valueRect.addRect(CGRect(x: 0, y: 0, width: width, height: height))
                 ctx.fill(valueRect, with: Helper.getGCColorForValue(value: currentValue))
@@ -68,7 +70,7 @@ struct InfoView: View {
                                                 
                 if self.model.hba1c > 0 {
                     let avgValue : String = unitMgDl ? String(format: "%.0f", self.model.averageToday) : String(format: "%.1f", Helper.mgToMmol(mgPerDl: self.model.averageToday))
-                    let avgText : Text = Text(verbatim: "ø\(avgValue)").foregroundStyle(foregroundFill).font(infoFont)
+                    let avgText : Text = Text(verbatim: "ø \(avgValue)").foregroundStyle(foregroundFill).font(infoFont)
                     ctx.draw(avgText, at: CGPoint(x: 20, y: height * 0.775), anchor: .leading)
                 
                     let todayText : Text = Text(verbatim: "\u{21E6}  Today  \u{21E8}").foregroundStyle(foregroundFill).font(infoFont)
@@ -94,6 +96,15 @@ struct InfoView: View {
                         ctx.draw(attentionSymbol, at: CGPoint(x: width - 20, y: 20), anchor: .center)
                     }
                 }
+                /*
+                if !self.model.networkMonitor.isConnectedToInternet {
+                    var offlineRect : Path = Path()
+                    offlineRect.addRoundedRect(in: CGRect(x: 10, y: 10, width: 60, height: 18), cornerRadii: RectangleCornerRadii(topLeading: 2.5, bottomLeading: 2.5, bottomTrailing: 2.5, topTrailing: 2.5))
+                    ctx.stroke(offlineRect, with: Constants.GC_WHITE, lineWidth: 1)
+                    let offlineText : Text = Text(verbatim: "OFFLINE").foregroundStyle(foregroundFill).font(offlineFont)
+                    ctx.draw(offlineText, at: CGPoint(x: 10 + 30, y: 10 + 9), anchor: .center)
+                }
+                */
             } symbols: {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .resizable()

@@ -31,7 +31,7 @@ struct DeltaChartView: View {
                 let deltaFontSize : Double  = height * 0.09
                 let deltaFont     : Font    = Font.system(size: deltaFontSize, weight: .regular, design: .rounded)
                 let barWidth      : Double  = 10
-
+                                
                 var deltas : [(Double, Double)] = []
                 if !self.model.last13Entries.isEmpty {
                     for index in 1 ..< self.model.last13Entries.count {

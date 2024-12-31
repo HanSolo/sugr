@@ -145,9 +145,7 @@ struct SugrWidgetEntryView : View {
                     .foregroundColor(.primary)
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, alignment: .center)
-            .containerBackground(for: .widget) {
-                Color.clear
-            }
+            .containerBackground(.regularMaterial, for: .widget)
             .background(.clear)
             .padding()
         } else if family == .accessoryCircular {
@@ -186,7 +184,7 @@ struct SugrWidget: Widget {
     
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             SugrWidgetEntryView(entry: entry)
-                .background()
+                .background(Color.clear)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .cornerRadius(10)
         }

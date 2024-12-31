@@ -10,8 +10,9 @@ import SwiftData
 
 
 struct ContentView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject          var model : SugrModel
+    @Environment(\.scenePhase)  private var phase
+    @Environment(\.colorScheme) private var colorScheme
+    @EnvironmentObject          private var model : SugrModel
     
     @State var settingsViewVisible : Bool = false
     
@@ -20,24 +21,27 @@ struct ContentView: View {
     
     
     var body: some View {
-        let darkMode    : Bool = self.colorScheme == .dark
-        let isLandscape : Bool = UIDevice.current.orientation.isLandscape
+        //let darkMode    : Bool = self.colorScheme == .dark
+        //let isLandscape : Bool = UIDevice.current.orientation.isLandscape
         
-        ZStack {
+        ZStack {            
             (colorScheme == .dark ? Constants.DARK_GRAY : Constants.WHITE)
                 .ignoresSafeArea(.all)
-            GeometryReader { geometry in                
+            GeometryReader { geometry in
                 VStack(alignment: .center, spacing: 0) {
                     TimelineView(.animation(minimumInterval: Constants.CANVAS_REFRESH_INTERVAL)) { timeline in
                         InfoView()
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.32)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: -5, trailing: 0))
                         AverageView()
-                            .frame(width: geometry.size.width, height: geometry.size.height * 0.05)
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.044)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: -5, trailing: 0))
                         DeltaChartView()
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.18)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: -5, trailing: 0))
                         LineChartView()
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.4)
-                    }
+                    }                    
                     
                     HStack {
                         Spacer()
@@ -57,10 +61,16 @@ struct ContentView: View {
                 .onReceive(timer) { _ in
                     fetchLast288Entries(force: false)
                     fetchLast30Days()
-                }
-                .task {
-                    fetchLast288Entries(force: true)
-                    fetchLast30Days()
+                }                
+                .onChange(of: phase) {
+                    switch phase {
+                        case .active     :
+                            fetchLast288Entries(force: true)
+                            fetchLast30Days()
+                        case .inactive   : break
+                        case .background : break
+                        default          : break
+                    }
                 }
             }
         }

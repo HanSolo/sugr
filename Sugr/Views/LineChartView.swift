@@ -30,11 +30,11 @@ struct LineChartView: View {
                 let scaleXFontSize : Double = width * 0.032
                 let scaleXFont     : Font   = Font.system(size: scaleXFontSize, weight: .regular, design: .rounded)
                 let valueFontSize  : Double = width * 0.03
-                let valueFont      : Font   = Font.system(size: scaleXFontSize, weight: .regular, design: .rounded)
+                let valueFont      : Font   = Font.system(size: valueFontSize, weight: .regular, design: .rounded)
                 
                 // Set dateformatter to short format for the xAxis tickmarks
                 dateFormatter.dateFormat = unitMgDl ? Constants.TF_MG_DL_SHORT : Constants.TF_MMOL_L_SHORT
-
+                
                 if !self.model.last13Entries.isEmpty {
                     let now          : Double = Date.now.timeIntervalSince1970
                     let visibleRange : Double = 3600 // Visible range in seconds (3600 -> 1h)
