@@ -226,6 +226,12 @@ public struct Helper {
         return getAverage(entries: entries.filter( { $0.date >= startOfToday }))
     }
     
+    public static func getAverageForDay(entries: [GlucoEntry], day: Date) -> Double {
+        let startOfDay : Double = Calendar.current.startOfDay(for: day).timeIntervalSince1970
+        let endOfDay   : Double = startOfDay + Constants.SECONDS_PER_DAY
+        return getAverage(entries: entries.filter( { $0.date >= startOfDay && $0.date < endOfDay }))
+    }
+    
     public static func getAverage(entries: [GlucoEntry]) -> Double {
         if entries.isEmpty { return 0 }
         return entries.reduce(0) { $0 + $1.sgv } / Double(entries.count)

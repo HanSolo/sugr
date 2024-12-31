@@ -31,12 +31,13 @@ struct ContentView: View {
                     TimelineView(.animation(minimumInterval: Constants.CANVAS_REFRESH_INTERVAL)) { timeline in
                         InfoView()
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.32)
+                        AverageView()
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.05)
                         DeltaChartView()
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.18)
                         LineChartView()
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.4)
                     }
-                    
                     
                     HStack {
                         Spacer()
@@ -48,28 +49,28 @@ struct ContentView: View {
                                 .foregroundColor(.primary)
                         }
                         .buttonStyle(.plain)
-                    }.padding()
+                    }.padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
                 }
                 .sheet(isPresented: $settingsViewVisible) {
                     SettingsView()
                 }
                 .onReceive(timer) { _ in
-                    fetchLast288Entries()
+                    fetchLast288Entries(force: false)
                     fetchLast30Days()
                 }
-                .onAppear {
-                    fetchLast288Entries()
+                .task {
+                    fetchLast288Entries(force: true)
                     fetchLast30Days()
                 }
             }
         }
     }
     
-    private func fetchLast288Entries() -> Void {
+    private func fetchLast288Entries(force: Bool) -> Void {
         let now : Double = Date.now.timeIntervalSince1970
         if self.model.networkMonitor.isConnected {
-            if self.model.currentEntry == nil {
-                debugPrint("No current entry found, fetching new entries")
+            if self.model.currentEntry == nil || force {
+                debugPrint(force ? "Forced update" : "No current entry found, fetching new entries")
                 Task {
                     let entries : [GlucoEntry] = await RestController.getGlucoseData(url: Properties.instance.nightscoutUrl!, apiSecret: Properties.instance.nightscoutApiSecret!, token: Properties.instance.nightscoutToken!, useApiV2: Properties.instance.nightscoutApiV2!, numberOfEntries: 288)!
                     self.model.last288Entries = entries.reversed()

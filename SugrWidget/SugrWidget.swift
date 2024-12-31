@@ -12,20 +12,35 @@ struct Provider: TimelineProvider {
     @EnvironmentObject private var model : SugrModel
     
     func placeholder(in context: Context) -> SugrEntry {
-        return SugrEntry(date: Date())
+        let unitMgDl : Bool   = Properties.instance.unitMgDl!
+        let value    : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
+        let delta    : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
+        let update   : Double = Properties.instance.date!
+        let arrow    : String = Constants.Direction.fromText(text: Properties.instance.direction!).arrow
+        return SugrEntry(date: Date.now, value: value, delta: delta, update: update, arrow: arrow, unitMgDl: unitMgDl)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SugrEntry) -> ()) {
-        let entry : SugrEntry = SugrEntry(date: Date())
+        let unitMgDl : Bool      = Properties.instance.unitMgDl!
+        let value    : Double    = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
+        let delta    : Double    = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
+        let update   : Double    = Properties.instance.date!
+        let arrow    : String    = Constants.Direction.fromText(text: Properties.instance.direction!).arrow
+        let entry    : SugrEntry = SugrEntry(date: Date.now, value: value, delta: delta, update: update, arrow: arrow, unitMgDl: unitMgDl)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries   : [SugrEntry] = []
-        let now       : Date        = Date.now
+        var entries  : [SugrEntry] = []
+        let now      : Date        = Date.now
+        let unitMgDl : Bool   = Properties.instance.unitMgDl!
+        let value    : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
+        let delta    : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
+        let update   : Double = Properties.instance.date!
+        let arrow    : String = Constants.Direction.fromText(text: Properties.instance.direction!).arrow
         for minOffset in 0 ..< 2 {
             let entryDate : Date      = Calendar.current.date(byAdding: .minute, value: minOffset * 30, to: now)!
-            let entry     : SugrEntry = SugrEntry(date: entryDate)
+            let entry     : SugrEntry = SugrEntry(date: entryDate, value: value, delta: delta, update: update, arrow: arrow, unitMgDl: unitMgDl)
             entries.append(entry)
         }
         let timeline : Timeline = Timeline(entries: entries, policy: .atEnd)
@@ -35,7 +50,12 @@ struct Provider: TimelineProvider {
 
 
 struct SugrEntry: TimelineEntry {
-    let date : Date
+    let date     : Date
+    let value    : Double
+    let delta    : Double
+    let update   : Double
+    let arrow    : String
+    let unitMgDl : Bool
 }
 
 
@@ -54,12 +74,11 @@ struct SugrWidgetEntryView : View {
     }
     
     var body: some View {
-        let unitMgDl  : Bool   = Properties.instance.unitMgDl!
-        let value     : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
-        let delta     : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
-        let date      : Double = Properties.instance.date!
-        let direction : String = Properties.instance.direction!
-        let arrow     : String = Constants.Direction.fromText(text: direction).arrow
+        let unitMgDl : Bool   = entry.unitMgDl
+        let value    : Double = unitMgDl ? entry.value : Helper.mgToMmol(mgPerDl: entry.value)
+        let delta    : Double = unitMgDl ? entry.delta : Helper.mgToMmol(mgPerDl: entry.value)
+        let update   : Double = entry.update
+        let arrow    : String = entry.arrow
         
         if family == .systemMedium {
             VStack {
@@ -67,7 +86,7 @@ struct SugrWidgetEntryView : View {
                     .font(Font.system(size: 48, weight: .bold, design: .rounded))
                 Text("\(unitMgDl ? "mg/dl" : "mmol/L") \(delta > 0 ? "+" : "")\(String(format: unitMgDl ? "%.0f" : "%.1f", delta))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
-                Text("\(formatter.string(from: Date(timeIntervalSince1970: date)))")
+                Text("\(formatter.string(from: Date(timeIntervalSince1970: update)))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
@@ -83,7 +102,7 @@ struct SugrWidgetEntryView : View {
                     .font(Font.system(size: 36, weight: .bold, design: .rounded))
                 Text("\(unitMgDl ? "mg/dl" : "mmol/L") \(delta > 0 ? "+" : "")\(String(format: unitMgDl ? "%.0f" : "%.1f", delta))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
-                Text("\(formatter.string(from: Date(timeIntervalSince1970: date)))")
+                Text("\(formatter.string(from: Date(timeIntervalSince1970: update)))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
@@ -117,7 +136,7 @@ struct SugrWidgetEntryView : View {
                         Color.clear
                     }
                     .foregroundColor(.primary)
-                Text("\(formatter.string(from: Date(timeIntervalSince1970: date)))")
+                Text("\(formatter.string(from: Date(timeIntervalSince1970: update)))")
                     .font(Font.system(size: 10, weight: .regular, design: .rounded))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .containerBackground(for: .widget) {

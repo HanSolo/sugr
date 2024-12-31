@@ -22,17 +22,16 @@ struct DeltaChartView: View {
                 let darkMode      : Bool    = self.colorScheme == .dark
                 let width         : Double  = size.width
                 let height        : Double  = size.height
-                let minSize       : Double  = min(width, height)
                 let unitMgDl      : Bool    = Properties.instance.unitMgDl!
                 let chartOffset   : Double  = 10
                 let chartWidth    : Double  = width - (2 * chartOffset)
                 let chartHeight   : Double  = height - (2 * chartOffset)
                 let centerY       : Double  = height * 0.5
                 let fgdColor      : Color   = .primary
-                let deltaFontSize : Double  = minSize * 0.09
+                let deltaFontSize : Double  = height * 0.09
                 let deltaFont     : Font    = Font.system(size: deltaFontSize, weight: .regular, design: .rounded)
                 let barWidth      : Double  = 10
-                
+
                 var deltas : [(Double, Double)] = []
                 if !self.model.last13Entries.isEmpty {
                     for index in 1 ..< self.model.last13Entries.count {

@@ -23,7 +23,7 @@ struct InfoView: View {
                 let isLandscape      : Bool            = UIDevice.current.orientation.isLandscape
                 let width            : Double          = size.width
                 let height           : Double          = size.height
-                let minSize          : Double          = (width < height ? width : height)
+                let minSize          : Double          = min(width, height)
                 let center           : CGPoint         = isLandscape ? CGPoint(x: width * 0.175, y: height * 0.5) : CGPoint(x: width * 0.5, y: height * 0.175)
                 let unitMgDl         : Bool            = Properties.instance.unitMgDl!
                 
@@ -37,15 +37,15 @@ struct InfoView: View {
                 let foregroundFill   : Color           = .white
                 let valueFontSize    : Double          = minSize * 0.485
                 let valueFont        : Font            = Font.system(size: valueFontSize, weight: .bold, design: .rounded)
-                let unitFontSize     : Double          = isLandscape ? minSize * 0.04 : minSize * 0.06
+                let unitFontSize     : Double          = isLandscape ? width * 0.04 : width * 0.06
                 let unitFont         : Font            = Font.system(size: unitFontSize, weight: .regular, design: .rounded)
                 let arrowFontSize    : Double          = minSize * 0.3
                 let arrowFont        : Font            = Font.system(size: arrowFontSize, weight: .bold, design: .rounded)
-                let spacer           : Double          = width * 0.025
+                let spacer           : Double          = minSize * 0.025
                 let datetimeFontSize : Double          = minSize * 0.075
                 let datetimeFont     : Font            = Font.system(size: datetimeFontSize, weight: .regular, design: .rounded)
                 let infoFontSize     : Double          = minSize * 0.065
-                let infoFont         : Font            = Font.system(size: infoFontSize, weight: .regular, design: .rounded)
+                let infoFont         : Font            = Font.system(size: infoFontSize, weight: .medium, design: .rounded)
                                                 
                 var valueRect : Path = Path()
                 valueRect.addRect(CGRect(x: 0, y: 0, width: width, height: height))
@@ -91,11 +91,13 @@ struct InfoView: View {
                 
                 if outdated {
                     if let attentionSymbol = ctx.resolveSymbol(id: 1) {
-                        ctx.draw(attentionSymbol, at: CGPoint(x: center.x, y: height * 0.9), anchor: .center)
+                        ctx.draw(attentionSymbol, at: CGPoint(x: width - 20, y: 20), anchor: .center)
                     }
                 }
             } symbols: {
                 Image(systemName: "exclamationmark.triangle.fill")
+                    .resizable()
+                    .frame(width: 24, height: 24)
                     .foregroundColor(.white)
                     .symbolEffect(.pulse.wholeSymbol, options: .repeat(.continuous))
                     .tag(1)

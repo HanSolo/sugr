@@ -57,14 +57,14 @@ public class Constants {
     public static let DARK_GRAY                           : Color  = Color(red: 0.156, green: 0.137, blue: 0.149, opacity: 1.00)
     public static let WHITE                               : Color  = Color.white
     public static let GRAY                                : Color  = Color.gray
-    public static let RED                                 : Color  = Color(red: 0.94, green: 0.11, blue: 0.13, opacity: 1.00)
-    public static let ORANGE                              : Color  = Color(red: 0.93, green: 0.43, blue: 0.00, opacity: 1.00)
-    public static let YELLOW                              : Color  = Color(red: 1.00, green: 0.74, blue: 0.01, opacity: 1.00)
-    public static let GREEN                               : Color  = Color(red: 0.57, green: 0.79, blue: 0.23, opacity: 1.00)
+    public static let RED                                 : Color  = Color(red: 0.96, green: 0.12, blue: 0.14, opacity: 1.00)
+    public static let ORANGE                              : Color  = Color(red: 1.00, green: 0.47, blue: 0.00, opacity: 1.00)
+    public static let YELLOW                              : Color  = Color(red: 1.00, green: 0.72, blue: 0.00, opacity: 1.00)
+    public static let GREEN                               : Color  = Color(red: 0.177, green: 0.76, blue: 0.0, opacity: 1.00)
     public static let DARK_GREEN                          : Color  = Color(red: 0.00, green: 0.50, blue: 0.13, opacity: 1.00)
     public static let LIGHT_BLUE                          : Color  = Color(red: 0.01, green: 0.60, blue: 0.93, opacity: 1.00)
     public static let BLUE                                : Color  = Color(red: 0.00, green: 0.43, blue: 1.00, opacity: 1.00)
-    
+        
     public static let GC_DARK_GRAY                        : GraphicsContext.Shading = GraphicsContext.Shading.color(DARK_GRAY)
     public static let GC_WHITE                            : GraphicsContext.Shading = GraphicsContext.Shading.color(WHITE)
     public static let GC_GRAY                             : GraphicsContext.Shading = GraphicsContext.Shading.color(GRAY)
@@ -76,7 +76,9 @@ public class Constants {
     public static let GC_LIGHT_BLUE                       : GraphicsContext.Shading = GraphicsContext.Shading.color(LIGHT_BLUE)
     public static let GC_BLUE                             : GraphicsContext.Shading = GraphicsContext.Shading.color(BLUE)
     
-    public static let GC_GREEN_AREA_COLOR                 : GraphicsContext.Shading = GraphicsContext.Shading.color(Color(red: 0.57, green: 0.79, blue: 0.23, opacity: 0.2))
+    public static let GC_GREEN_AREA_COLOR                 : GraphicsContext.Shading = GraphicsContext.Shading.color(Color(red: 0.177, green: 0.76, blue: 0.0, opacity: 0.2))
+    
+    public static let WEEKDAYS                            : [String] = ["S", "M", "T", "W", "T", "F", "S"]
     
     public static let STOPS                               : [Gradient.Stop] = [
         Gradient.Stop(color: RED,    location: 0.0),

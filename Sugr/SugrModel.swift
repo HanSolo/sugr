@@ -78,6 +78,15 @@ public class SugrModel: ObservableObject {
                 self.averageToday = Helper.getAverageForToday(entries: self.last288Entries)
                 self.inRangeToday = Helper.getTimeInRangeForToday(entries: self.last288Entries)
                 
+                if !self.last8640Entries.isEmpty {
+                    self.averagesLast30Days.removeAll()
+                    for n in 0..<30 {
+                        let day : Date = Date.now - (TimeInterval(n) * Constants.SECONDS_PER_DAY)
+                        let avg : Double = Helper.getAverageForDay(entries: self.last8640Entries, day: day)
+                        averagesLast30Days.append(avg)
+                    }
+                }
+                                
                 WidgetCenter.shared.reloadAllTimelines()
             }
         }
@@ -88,6 +97,12 @@ public class SugrModel: ObservableObject {
                 let average   : Double = self.last8640Entries.reduce(0) { $0 + $1.sgv } / Double(self.last8640Entries.count)
                 self.hba1c             = (0.0296 * average) + 2.419 // formula from 2014 (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4771657/)
                 self.inRangeLast30Days = Helper.getTimeInRangeForLast30Days(entries: self.last8640Entries)
+                self.averagesLast30Days.removeAll()
+                for n in 0..<30 {
+                    let day : Date = Date.now - (TimeInterval(n) * Constants.SECONDS_PER_DAY)
+                    let avg : Double = Helper.getAverageForDay(entries: self.last8640Entries, day: day)
+                    averagesLast30Days.append(avg)
+                }
             }
         }
     }
@@ -95,6 +110,7 @@ public class SugrModel: ObservableObject {
     @Published var averageToday        : Double         = 0.0
     @Published var inRangeToday        : Double         = 0.0
     @Published var inRangeLast30Days   : Double         = 0.0
+    @Published var averagesLast30Days  : [Double]       = []
     
 
     init(glucoseUpdate: Double? = 0.0, glucoseValue: Double? = 0.0) {
