@@ -80,7 +80,7 @@ public struct Helper {
         if seconds.isInfinite || seconds.isNaN { return "--:--" }
         let ddhhmm : (Int, Int, Int) = secondsToDDHHMM(seconds: seconds)
         if ddhhmm.0 == 0 && ddhhmm.1 == 0 {
-            return ddhhmm.2 == 0 ? "now" : String(format:"%2d min ago", ddhhmm.2)
+            return ddhhmm.2 == 0 ? "now" : String(format:"%1d min ago", ddhhmm.2)
         } else if ddhhmm.0 == 0 {
             return String(format:"%2d:%02d ago", ddhhmm.1, ddhhmm.2)
         } else {
@@ -195,5 +195,39 @@ public struct Helper {
             }
         }
         return entries
+    }
+    
+    public static func getTimeInRangeForLast30Days(entries: [GlucoEntry]) -> Double {
+        if entries.isEmpty { return 0 }
+        let startOf30DaysAgo     : Double       = Calendar.current.startOfDay(for: Date.now).timeIntervalSince1970 - Constants.Interval.LAST_720_HOURS.seconds
+        let entriesForLast30Days : [GlucoEntry] = entries.filter( { $0.date >= startOf30DaysAgo })
+        if entriesForLast30Days.isEmpty { return 0 }
+        let noOfEntries      : Double       = Double(entriesForLast30Days.count) / 100.0
+        let minNormal        : Double       = Properties.instance.minNormal!
+        let maxNormal        : Double       = Properties.instance.maxNormal!
+        let timeInRange      : Double       = (Double(entriesForLast30Days.filter({ $0.sgv > minNormal && $0.sgv < maxNormal }).count) / noOfEntries).rounded()
+        return timeInRange
+    }
+    
+    public static func getTimeInRangeForToday(entries: [GlucoEntry]) -> Double {
+        if entries.isEmpty { return 0 }
+        let startOfToday    : Double       = Calendar.current.startOfDay(for: Date.now).timeIntervalSince1970
+        let entriesForToday : [GlucoEntry] = entries.filter( { $0.date >= startOfToday })
+        if entriesForToday.isEmpty { return 0 }
+        let noOfEntries     : Double       = Double(entriesForToday.count) / 100.0
+        let minNormal       : Double       = Properties.instance.minNormal!
+        let maxNormal       : Double       = Properties.instance.maxNormal!
+        let timeInRange     : Double       = (Double(entriesForToday.filter({ $0.sgv > minNormal && $0.sgv < maxNormal }).count) / noOfEntries).rounded()
+        return timeInRange
+    }
+    
+    public static func getAverageForToday(entries: [GlucoEntry]) -> Double {
+        let startOfToday : Double = Calendar.current.startOfDay(for: Date.now).timeIntervalSince1970
+        return getAverage(entries: entries.filter( { $0.date >= startOfToday }))
+    }
+    
+    public static func getAverage(entries: [GlucoEntry]) -> Double {
+        if entries.isEmpty { return 0 }
+        return entries.reduce(0) { $0 + $1.sgv } / Double(entries.count)
     }
 }

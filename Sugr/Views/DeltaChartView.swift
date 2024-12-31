@@ -31,14 +31,14 @@ struct DeltaChartView: View {
                 let fgdColor      : Color   = .primary
                 let deltaFontSize : Double  = minSize * 0.09
                 let deltaFont     : Font    = Font.system(size: deltaFontSize, weight: .regular, design: .rounded)
-                let barWidth      : Double  = 10//chartWidth / 24
+                let barWidth      : Double  = 10
                 
                 var deltas : [(Double, Double)] = []
                 if !self.model.last13Entries.isEmpty {
                     for index in 1 ..< self.model.last13Entries.count {
                         let lastEntry : GlucoEntry = self.model.last13Entries[index - 1]
                         let entry     : GlucoEntry = self.model.last13Entries[index]
-                        let delta     : Double     = entry.sgv  - lastEntry.sgv
+                        let delta     : Double     = unitMgDl ? (entry.sgv  - lastEntry.sgv) : Helper.mgToMmol(mgPerDl: (entry.sgv - lastEntry.sgv))
                         let date      : Double     = (entry.date - lastEntry.date) * 0.5
                         deltas.append((date, delta))
                     }
@@ -59,15 +59,15 @@ struct DeltaChartView: View {
                     xAxis.addLine(to: CGPoint(x: chartOffset + chartWidth, y: chartOffset + centerY))
                     ctx.stroke(xAxis, with: darkMode ? Constants.GC_WHITE : Constants.GC_GRAY)
                     
-                    for n in 2..<self.model.last13Entries.count {
+                    for n in 1..<self.model.last13Entries.count {
                         let lastEntry : GlucoEntry = self.model.last13Entries[n - 1]
                         let entry     : GlucoEntry = self.model.last13Entries[n]
-                        let delta     : Double     = entry.sgv - lastEntry.sgv
+                        let delta     : Double     = unitMgDl ? (entry.sgv  - lastEntry.sgv) : Helper.mgToMmol(mgPerDl: (entry.sgv - lastEntry.sgv))
                         let barDate   : Double     = (entry.date - lastEntry.date) * 0.5
                         var x         : Double     = chartOffset + (entry.date - minDate - barDate) * scaleX
                         x = Helper.clamp(min: chartOffset, max: chartOffset + chartWidth, value: x)
                         
-                        let barHeight : Double     = unitMgDl ? abs(delta * scaleY) : abs(delta * 15 * scaleY)
+                        let barHeight : Double     = abs(delta * scaleY)
                         let barX      : Double     = x - barWidth * 0.5
                         let barY      : Double     = delta > 0 ? chartOffset + centerY - barHeight : chartOffset + centerY
                         if barX > chartOffset {

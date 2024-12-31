@@ -40,27 +40,10 @@ public class SugrModel: ObservableObject {
     }
     @Published var glucoseDeltaValue   : Double         = 0.0
     @Published var glucoseDeltaSeconds : Double         = 0.0
-    @Published var last13Entries       : [GlucoEntry]   = [] {
-        didSet {
-            if last13Entries.count > 1 {
-                let entry     : GlucoEntry = last13Entries.last!
-                let lastEntry : GlucoEntry = last13Entries.dropLast().last!                
-                self.currentEntry = entry
-                self.lastEntry    = lastEntry
-                Properties.instance.value     = entry.sgv
-                Properties.instance.date      = entry.date
-                Properties.instance.direction = entry.direction
-                Properties.instance.delta     = entry.sgv - lastEntry.sgv
-                //Helper.entriesToUserDefaults(entries: [entry, lastEntry])
-                
-                //WidgetCenter.shared.reloadAllTimelines()
-            }
-        }
-    }
     @Published var currentEntry        : GlucoEntry? {
         didSet {
-            self.date = (currentEntry?.date ?? 0)
-            self.value  = currentEntry?.sgv  ?? 0
+            self.date  = (currentEntry?.date ?? 0)
+            self.value = currentEntry?.sgv  ?? 0
         }
     }
     @Published var lastEntry           : GlucoEntry? {
@@ -69,15 +52,49 @@ public class SugrModel: ObservableObject {
             self.lastValue  = lastEntry?.sgv  ?? 0
         }
     }
+    @Published var last13Entries       : [GlucoEntry]   = []
+    @Published var last288Entries      : [GlucoEntry]   = [] {
+        didSet {
+            if last288Entries.count > 1 {
+                let entry     : GlucoEntry = last288Entries.last!
+                let lastEntry : GlucoEntry = last288Entries.dropLast().last!                
+                
+                self.currentEntry = entry
+                self.lastEntry    = lastEntry
+                
+                Properties.instance.value     = entry.sgv
+                Properties.instance.date      = entry.date
+                Properties.instance.direction = entry.direction
+                Properties.instance.delta     = entry.sgv - lastEntry.sgv
+                
+                if last288Entries.count > 12 {
+                    self.last13Entries.removeAll()
+                    for i in 0..<12 {
+                        self.last13Entries.append(last288Entries[last288Entries.count - i - 1])
+                    }
+                    self.last13Entries.reverse()
+                }
+                
+                self.averageToday = Helper.getAverageForToday(entries: self.last288Entries)
+                self.inRangeToday = Helper.getTimeInRangeForToday(entries: self.last288Entries)
+                
+                WidgetCenter.shared.reloadAllTimelines()
+            }
+        }
+    }
     @Published var last8640Entries     : [GlucoEntry]   = [] {
         didSet {
             if !last8640Entries.isEmpty {
-                let average : Double = self.last8640Entries.reduce(0) { $0 + $1.sgv } / Double(self.last8640Entries.count)
-                self.hba1c = (0.0296 * average) + 2.419 // formula from 2014 (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4771657/)
+                let average   : Double = self.last8640Entries.reduce(0) { $0 + $1.sgv } / Double(self.last8640Entries.count)
+                self.hba1c             = (0.0296 * average) + 2.419 // formula from 2014 (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4771657/)
+                self.inRangeLast30Days = Helper.getTimeInRangeForLast30Days(entries: self.last8640Entries)
             }
         }
     }
     @Published var hba1c               : Double         = 0.0
+    @Published var averageToday        : Double         = 0.0
+    @Published var inRangeToday        : Double         = 0.0
+    @Published var inRangeLast30Days   : Double         = 0.0
     
 
     init(glucoseUpdate: Double? = 0.0, glucoseValue: Double? = 0.0) {

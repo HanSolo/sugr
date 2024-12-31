@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import BackgroundTasks
+import WidgetKit
 
 
 @main
@@ -45,7 +46,8 @@ struct SugrApp: App {
                     Properties.instance.delta     = entry.sgv - lastEntry.sgv
                     
                     await MainActor.run {
-                        self.model.last13Entries = entries
+                        self.model.last288Entries = entries
+                        WidgetCenter.shared.reloadAllTimelines()
                         //debugPrint("App refresh in background successful")
                     }
                 } else {
@@ -70,12 +72,11 @@ struct SugrApp: App {
         let token           : String = Properties.instance.nightscoutToken!
         let useApiV2        : Bool   = Properties.instance.nightscoutApiV2!
         let apiSecret       : String = Properties.instance.nightscoutApiSecret!
-        let numberOfEntries : Int    = 13
-        let inBackground    : Bool   = false
+        let numberOfEntries : Int    = 288
         
         if url.isEmpty { return [] }
         
-        let sessionConfig : URLSessionConfiguration = inBackground ? URLSessionConfiguration.background(withIdentifier: taskId) : URLSessionConfiguration.default
+        let sessionConfig : URLSessionConfiguration = URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest  = 30.0
         sessionConfig.timeoutIntervalForResource = 30.0
         sessionConfig.isDiscretionary            = false

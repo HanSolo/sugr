@@ -84,7 +84,7 @@ struct SettingsView: View {
                 Properties.instance.nightscoutApiSecret = self.nightscoutApiSecret
                 Properties.instance.nightscoutApiV2     = self.nightscoutApiV2
                 Properties.instance.unitMgDl            = self.unitMgDl
-                //WidgetCenter.shared.reloadAllTimelines()
+                WidgetCenter.shared.reloadAllTimelines()
             }
         }
     }

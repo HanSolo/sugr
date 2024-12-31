@@ -21,16 +21,16 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries : [SugrEntry] = []
-        let now     : Date        = Date()
-        for minuteOffset in stride(from: 0, to: 1440, by: 15) {
-            let entryDate : Date      = Calendar.current.date(byAdding: .minute, value: minuteOffset, to: now)!
+        var entries   : [SugrEntry] = []
+        let now       : Date        = Date.now
+        for minOffset in 0 ..< 2 {
+            let entryDate : Date      = Calendar.current.date(byAdding: .minute, value: minOffset * 30, to: now)!
             let entry     : SugrEntry = SugrEntry(date: entryDate)
             entries.append(entry)
         }
-        let timeline = Timeline(entries: entries, policy: .atEnd)
+        let timeline : Timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
-    }
+    }        
 }
 
 

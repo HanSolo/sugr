@@ -13,9 +13,9 @@ public class Constants {
     public static let APP_NAME                            : String = "Sugr"
     public static let APP_GROUP_ID                        : String = "group.eu.hansolo.Sugr"
     public static let APP_REFRESH_ID                      : String = "eu.hansolo.Sugr.refresh"
-    public static let APP_REFRESH_INTERVAL                : Double = 300
-    public static let OUTDATED_DURATION                   : Double = 420 // seconds before the attention sign will popup up
-    public static let UPDATE_INTERVAL                     : Double = 150 // seconds before next entries will be fetched
+    public static let APP_REFRESH_INTERVAL                : Double = 1800 // refresh app every 30 minutes in background
+    public static let OUTDATED_DURATION                   : Double = 420  // seconds before the attention sign will popup up
+    public static let UPDATE_INTERVAL                     : Double = 150  // seconds before next entries will be fetched
     public static let CANVAS_REFRESH_INTERVAL             : Double = 1
     
     public static let LAST_TWO_ENTRIES_KEY_UD             : String = "lastTwoEntries"
@@ -23,17 +23,16 @@ public class Constants {
     public static let DTF_MG_DL                           : String = "d.M.yy HH:MM"
     public static let DTF_MMOL_L                          : String = "M/d/yy hh:mma"
     
-    public static let DF_MG_DL                            : String = "dd.MM.yyyy"
-    public static let TF_MG_DL                            : String = "HH:mm"
+    public static let DF_MG_DL                            : String = "dd.MM.yyyy, HH:mm"
     public static let TF_MG_DL_SHORT                      : String = "H:mm"
-    public static let DF_MMOL_L                           : String = "MM/dd/yyyy"
-    public static let TF_MMOL_L                           : String = "hh:mma"
+    public static let DF_MMOL_L                           : String = "MM/dd/yyyy, hh:mma"
     public static let TF_MMOL_L_SHORT                     : String = "h:mm"
     
     public static let API_SGV_V2_JSON                     : String = "/api/v2/entries/sgv.json"
     public static let API_SGV_V1_JSON                     : String = "/api/v1/entries/sgv.json"
     
     public static let SECONDS_PER_DAY                     : Double = 86400
+    public static let VALUES_PER_24_HOURS                 : Int    = 288
     public static let VALUES_PER_30_DAYS                  : Int    = 8640
     
     public static let MG_PER_ML_TO_MMOL_PER_L             : Double =  0.0555000000001  // FActor to convert mg/dl  -> mmol/l
