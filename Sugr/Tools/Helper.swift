@@ -169,29 +169,29 @@ public struct Helper {
         }
     }
     
-    public static func entriesToUserDefaults(entries: [GlucoEntry]) -> Void {
+    public static func storeEntriesToSharedUserDefaults(entries: [GlucoEntry]) -> Void {
         let encoder : JSONEncoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         do {
             let jsonData = try encoder.encode(entries)
-            UserDefaults(suiteName: "group.eu.hansolo.Sugr")!.set(jsonData, forKey: Constants.LAST_TWO_ENTRIES_KEY_UD)
+            UserDefaults(suiteName: Constants.APP_GROUP_ID)!.set(jsonData, forKey: Constants.LAST_TWO_ENTRIES_KEY_UD)
             debugPrint("Saved entries to user defaults")
         } catch {
             debugPrint("Error encode json entries and save to user defaults")
         }
     }
-    public static func entriesFromUserDefaults() -> [GlucoEntry] {
+    public static func getEntriesFromSharedUserDefaults() -> [GlucoEntry] {
         let decoder : JSONDecoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         var entries : [GlucoEntry] = []
-        let encodedData = UserDefaults(suiteName: "group.eu.hansolo.Sugr")!.object(forKey: Constants.LAST_TWO_ENTRIES_KEY_UD) as? Data
+        let encodedData = UserDefaults(suiteName: Constants.APP_GROUP_ID)!.object(forKey: Constants.LAST_TWO_ENTRIES_KEY_UD) as? Data
         if let jsonEncoded = encodedData {
             do {
-                try decoder.decode([GlucoEntry].self, from: jsonEncoded).forEach { entries.append($0) }
+                try decoder.decode([GlucoEntry].self, from: jsonEncoded).forEach { entries.append($0) }                
                 debugPrint("Decoded json entries from user defaults")
             } catch {
-                debugPrint("Error decoding json entries from user defaults")
+                debugPrint("Error decoding json entries from user defaults. \(error)")
             }
         }
         return entries

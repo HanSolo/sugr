@@ -9,43 +9,68 @@ import WidgetKit
 import SwiftUI
 
 struct Provider: TimelineProvider {
-    @EnvironmentObject private var model : SugrModel
     
     func placeholder(in context: Context) -> SugrEntry {
-        let unitMgDl : Bool   = Properties.instance.unitMgDl!
-        let value    : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
-        let delta    : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
-        let update   : Double = Properties.instance.date!
-        let arrow    : String = Constants.Direction.fromText(text: Properties.instance.direction!).arrow
-        return SugrEntry(date: Date.now, value: value, delta: delta, update: update, arrow: arrow, unitMgDl: unitMgDl)
+        //debugPrint("SugrWidget.placeholder()")
+        let unitMgDl : Bool         = Properties.instance.unitMgDl!
+        let glucoEntries  : [GlucoEntry] = Helper.getEntriesFromSharedUserDefaults()
+        if glucoEntries.count > 1 {
+            let currentEntry : GlucoEntry = glucoEntries.first!
+            let lastEntry    : GlucoEntry = glucoEntries.last!
+            let value        : Double     = unitMgDl ? currentEntry.sgv : Helper.mgToMmol(mgPerDl: currentEntry.sgv)
+            let date         : Double     = currentEntry.date
+            let delta        : Double     = unitMgDl ? (value - lastEntry.sgv) : Helper.mgToMmol(mgPerDl: (value - lastEntry.sgv))
+            let arrow        : String     = Constants.Direction.fromText(text: currentEntry.direction).arrow
+            return SugrEntry(date: Date.now, value: value, delta: delta, update: date, arrow: arrow, unitMgDl: unitMgDl)
+        } else {
+            return SugrEntry(date: Date.now, value: 0.0, delta: 0.0, update: Date.now.timeIntervalSince1970, arrow: "", unitMgDl: true)
+        }
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SugrEntry) -> ()) {
-        let unitMgDl : Bool      = Properties.instance.unitMgDl!
-        let value    : Double    = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
-        let delta    : Double    = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
-        let update   : Double    = Properties.instance.date!
-        let arrow    : String    = Constants.Direction.fromText(text: Properties.instance.direction!).arrow
-        let entry    : SugrEntry = SugrEntry(date: Date.now, value: value, delta: delta, update: update, arrow: arrow, unitMgDl: unitMgDl)
+        //debugPrint("SugrWidget.getSnapshot()")
+        let unitMgDl : Bool         = Properties.instance.unitMgDl!
+        let glucoEntries  : [GlucoEntry] = Helper.getEntriesFromSharedUserDefaults()
+        var entry    : SugrEntry
+        if glucoEntries.count > 1 {
+            let currentEntry : GlucoEntry = glucoEntries.first!
+            let lastEntry    : GlucoEntry = glucoEntries.last!
+            let value        : Double     = unitMgDl ? currentEntry.sgv : Helper.mgToMmol(mgPerDl: currentEntry.sgv)
+            let date         : Double     = currentEntry.date
+            let delta        : Double     = unitMgDl ? (value - lastEntry.sgv) : Helper.mgToMmol(mgPerDl: (value - lastEntry.sgv))
+            let arrow        : String     = Constants.Direction.fromText(text: currentEntry.direction).arrow
+            entry = SugrEntry(date: Date.now, value: value, delta: delta, update: date, arrow: arrow, unitMgDl: unitMgDl)
+        } else {
+            entry = SugrEntry(date: Date.now, value: 0.0, delta: 0.0, update: Date.now.timeIntervalSince1970, arrow: "", unitMgDl: true)
+        }
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries  : [SugrEntry] = []
-        let now      : Date        = Date.now
-        let unitMgDl : Bool   = Properties.instance.unitMgDl!
-        let value    : Double = unitMgDl ? Properties.instance.value! : Helper.mgToMmol(mgPerDl: Properties.instance.value!)
-        let delta    : Double = unitMgDl ? Properties.instance.delta! : Helper.mgToMmol(mgPerDl: Properties.instance.delta!)
-        let update   : Double = Properties.instance.date!
-        let arrow    : String = Constants.Direction.fromText(text: Properties.instance.direction!).arrow
+    func getTimeline(in context: Context, completion: @escaping (Timeline<SugrEntry>) -> ()) {
+        //debugPrint("SugrWidget.getTimeline()")
+        var entries : [SugrEntry] = []
+        let now     : Date        = Date.now
         for minOffset in 0 ..< 2 {
-            let entryDate : Date      = Calendar.current.date(byAdding: .minute, value: minOffset * 30, to: now)!
-            let entry     : SugrEntry = SugrEntry(date: entryDate, value: value, delta: delta, update: update, arrow: arrow, unitMgDl: unitMgDl)
+            let entryDate    : Date         = Calendar.current.date(byAdding: .minute, value: minOffset * 30, to: now)!
+            let unitMgDl     : Bool         = Properties.instance.unitMgDl!
+            let glucoEntries : [GlucoEntry] = Helper.getEntriesFromSharedUserDefaults()
+            var entry        : SugrEntry
+            if glucoEntries.count > 1 {
+                let currentEntry : GlucoEntry = glucoEntries.first!
+                let lastEntry    : GlucoEntry = glucoEntries.last!
+                let value        : Double     = unitMgDl ? currentEntry.sgv : Helper.mgToMmol(mgPerDl: currentEntry.sgv)
+                let date         : Double     = currentEntry.date
+                let delta        : Double     = unitMgDl ? (value - lastEntry.sgv) : Helper.mgToMmol(mgPerDl: (value - lastEntry.sgv))
+                let arrow        : String     = Constants.Direction.fromText(text: currentEntry.direction).arrow
+                entry = SugrEntry(date: entryDate, value: value, delta: delta, update: date, arrow: arrow, unitMgDl: unitMgDl)
+            } else {
+                entry = SugrEntry(date: entryDate, value: 0.0, delta: 0.0, update: Date.now.timeIntervalSince1970, arrow: "", unitMgDl: true)
+            }
             entries.append(entry)
         }
         let timeline : Timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
-    }        
+        completion(timeline)        
+    }
 }
 
 
@@ -75,9 +100,9 @@ struct SugrWidgetEntryView : View {
     
     var body: some View {
         let unitMgDl : Bool   = entry.unitMgDl
-        let value    : Double = unitMgDl ? entry.value : Helper.mgToMmol(mgPerDl: entry.value)
-        let delta    : Double = unitMgDl ? entry.delta : Helper.mgToMmol(mgPerDl: entry.value)
-        let update   : Double = entry.update
+        let value    : Double = entry.value
+        let delta    : Double = entry.delta
+        let date     : Double = entry.update
         let arrow    : String = entry.arrow
         
         if family == .systemMedium {
@@ -86,7 +111,7 @@ struct SugrWidgetEntryView : View {
                     .font(Font.system(size: 48, weight: .bold, design: .rounded))
                 Text("\(unitMgDl ? "mg/dl" : "mmol/L") \(delta > 0 ? "+" : "")\(String(format: unitMgDl ? "%.0f" : "%.1f", delta))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
-                Text("\(formatter.string(from: Date(timeIntervalSince1970: update)))")
+                Text("\(formatter.string(from: Date(timeIntervalSince1970: date)))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
@@ -102,7 +127,7 @@ struct SugrWidgetEntryView : View {
                     .font(Font.system(size: 36, weight: .bold, design: .rounded))
                 Text("\(unitMgDl ? "mg/dl" : "mmol/L") \(delta > 0 ? "+" : "")\(String(format: unitMgDl ? "%.0f" : "%.1f", delta))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
-                Text("\(formatter.string(from: Date(timeIntervalSince1970: update)))")
+                Text("\(formatter.string(from: Date(timeIntervalSince1970: date)))")
                     .font(Font.system(size: 14, weight: .regular, design: .rounded))
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
@@ -136,7 +161,7 @@ struct SugrWidgetEntryView : View {
                         Color.clear
                     }
                     .foregroundColor(.primary)
-                Text("\(formatter.string(from: Date(timeIntervalSince1970: update)))")
+                Text("\(formatter.string(from: Date(timeIntervalSince1970: date)))")
                     .font(Font.system(size: 10, weight: .regular, design: .rounded))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .containerBackground(for: .widget) {
@@ -177,19 +202,17 @@ struct SugrWidgetEntryView : View {
 
 struct SugrWidget: Widget {
     @Environment(\.widgetFamily) private var family
-    
-    let kind: String = "SugrWidget"
-
+        
     var body: some WidgetConfiguration {
     
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+        StaticConfiguration(kind: Constants.WIDGET_KIND, provider: Provider()) { entry in
             SugrWidgetEntryView(entry: entry)
                 .background(Color.clear)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .cornerRadius(10)
         }
         .configurationDisplayName("SugrMon Widget")
-        .description("Glucose value")
+        .description("A widget to show the glucose value fetched from a nightscout server")
         .supportedFamilies([.systemMedium, .systemSmall, .accessoryRectangular, .accessoryCircular])
     }
 }

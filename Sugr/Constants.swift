@@ -17,6 +17,7 @@ public class Constants {
     public static let OUTDATED_DURATION                   : Double = 420  // seconds before the attention sign will popup up
     public static let UPDATE_INTERVAL                     : Double = 150  // seconds before next entries will be fetched
     public static let CANVAS_REFRESH_INTERVAL             : Double = 1
+    public static let WIDGET_KIND                         : String = "eu.hansolo.Sugr.widget"
     
     public static let LAST_TWO_ENTRIES_KEY_UD             : String = "lastTwoEntries"
 

@@ -12,7 +12,7 @@ public struct GlucoEntry: Codable, Equatable, Sendable {
     let sgv         : Double
     let datelong    : Double
     let date        : Double
-    let dateString  : Date
+    let dateString  : String
     let trend       : MetadataType
     let direction   : String
     let device      : String
@@ -58,7 +58,7 @@ extension GlucoEntry {
         self.sgv         = container.contains(.sgv)        ? try container.decode(Double.self, forKey: .sgv)         : 0
         self.datelong    = container.contains(.datelong)   ? try container.decode(Double.self, forKey: .datelong)    : Date.init().timeIntervalSince1970
         self.date        = datelong / 1000
-        self.dateString  = container.contains(.dateString) ? try container.decode(Date.self,   forKey: .dateString)  : Date.init(timeIntervalSince1970: self.datelong)
+        self.dateString  = container.contains(.dateString) ? try container.decode(String.self, forKey: .dateString)  : ""
         self.trend       = container.contains(.trend)      ? try container.decode(MetadataType.self, forKey: .trend) : MetadataType.int(0)
         self.direction   = self.trend.isString()           ? container.contains(.trend) ? try container.decode(String.self, forKey: .trend) : "" : container.contains(.direction) ? try container.decode(String.self, forKey: .direction) : ""
         self.device      = container.contains(.device)     ? try container.decode(String.self, forKey: .device)      : ""
@@ -93,7 +93,7 @@ extension GlucoEntry {
         self.mills       = entry.mills
     }
     
-    init(_id: String, sgv: Double, datelong: Double, dateString: Date, trend: MetadataType, direction: String, device: String, type: String, utcOffset: Int, noise: Int, filtered: Double, unfiltered: Double, rssi: Int, delta: Double, sysTime: String, mills: Double) {
+    init(_id: String, sgv: Double, datelong: Double, dateString: String, trend: MetadataType, direction: String, device: String, type: String, utcOffset: Int, noise: Int, filtered: Double, unfiltered: Double, rssi: Int, delta: Double, sysTime: String, mills: Double) {
         self._id        = _id
         self.sgv        = sgv
         self.datelong   = datelong
@@ -113,7 +113,7 @@ extension GlucoEntry {
         self.mills      = mills
     }
     
-    init(_id: String, sgv: Double, datelong: Double, dateString: Date, trend: Int, direction: String, device: String, type: String, utcOffset: Int, noise: Int, filtered: Double, unfiltered: Double, rssi: Int, delta: Double, sysTime: String, mills: Double) {
+    init(_id: String, sgv: Double, datelong: Double, dateString: String, trend: Int, direction: String, device: String, type: String, utcOffset: Int, noise: Int, filtered: Double, unfiltered: Double, rssi: Int, delta: Double, sysTime: String, mills: Double) {
         self.init(_id: _id, sgv: sgv, datelong: datelong, dateString: dateString, trend: MetadataType.int(trend), direction: direction, device: device, type: type, utcOffset: utcOffset, noise: noise, filtered: filtered, unfiltered: unfiltered, rssi: rssi, delta: delta, sysTime: sysTime, mills: mills)
     }
 }
@@ -123,7 +123,7 @@ public struct GlucoEntryData: Codable {
     var sgv        : Double?
     var date       : Double?
     var dateCorrect: Int64?
-    var dateString : Date?
+    var dateString : String?
     var trend      : Int64?
     var direction  : String?
     var device     : String?

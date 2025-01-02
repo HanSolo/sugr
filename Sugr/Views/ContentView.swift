@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 
 struct ContentView: View {
@@ -85,6 +86,10 @@ struct ContentView: View {
                     let entries : [GlucoEntry] = await RestController.getGlucoseData(url: Properties.instance.nightscoutUrl!, apiSecret: Properties.instance.nightscoutApiSecret!, token: Properties.instance.nightscoutToken!, useApiV2: Properties.instance.nightscoutApiV2!, numberOfEntries: 288)!
                     self.model.last288Entries = entries.reversed()
                     Properties.instance.last288EntriesUpdate = now
+                    if phase == .active {
+                        WidgetCenter.shared.reloadAllTimelines()
+                        debugPrint("WidgetCenter reloaded")
+                    }
                 }
             } else {
                 if now - Properties.instance.last288EntriesUpdate! > Constants.UPDATE_INTERVAL {
@@ -93,6 +98,10 @@ struct ContentView: View {
                         let entries : [GlucoEntry] = await RestController.getGlucoseData(url: Properties.instance.nightscoutUrl!, apiSecret: Properties.instance.nightscoutApiSecret!, token: Properties.instance.nightscoutToken!, useApiV2: Properties.instance.nightscoutApiV2!, numberOfEntries: 288)!
                         self.model.last288Entries = entries.reversed()
                         Properties.instance.last288EntriesUpdate = now
+                        if phase == .active {
+                            WidgetCenter.shared.reloadAllTimelines()
+                            debugPrint("WidgetCenter reloaded")
+                        }
                     }
                 }
             }

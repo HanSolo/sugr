@@ -7,39 +7,26 @@
 
 import Foundation
 import SwiftData
-import WidgetKit
 
 @MainActor
 public class SugrModel: ObservableObject {
     @Published var networkMonitor      : NetworkMonitor = NetworkMonitor()
-    @Published var date                : Double         = Properties.instance.date! {
+    @Published var date                : Double         = Date.now.timeIntervalSince1970 {
         willSet {
             self.lastDate = self.date
         }
-        didSet {
-            self.glucoseDeltaSeconds = self.date - self.lastDate
-        }
     }
-    @Published var value               : Double         = Properties.instance.value! {
+    @Published var value               : Double         = 0.0 {
         willSet {
             self.lastValue = self.value
         }
         didSet {
-            self.glucoseDeltaValue = self.value - self.lastValue
+            self.delta = self.value - self.lastValue
         }
     }
-    @Published var lastDate            : Double         = Properties.instance.lastDate! {
-        didSet {
-            Properties.instance.lastDate = self.lastDate
-        }
-    }
-    @Published var lastValue           : Double         = Properties.instance.lastValue! {
-        didSet {
-            Properties.instance.lastValue = self.lastValue
-        }
-    }
-    @Published var glucoseDeltaValue   : Double         = 0.0
-    @Published var glucoseDeltaSeconds : Double         = 0.0
+    @Published var lastDate            : Double         = Date.now.timeIntervalSince1970
+    @Published var lastValue           : Double         = 0.0
+    @Published var delta               : Double         = 0.0
     @Published var currentEntry        : GlucoEntry? {
         didSet {
             self.date  = (currentEntry?.date ?? 0)
@@ -48,8 +35,8 @@ public class SugrModel: ObservableObject {
     }
     @Published var lastEntry           : GlucoEntry? {
         didSet {
-            self.lastDate = (lastEntry?.date ?? 0)
-            self.lastValue  = lastEntry?.sgv  ?? 0
+            self.lastDate  = (lastEntry?.date ?? 0)
+            self.lastValue = lastEntry?.sgv  ?? 0
         }
     }
     @Published var last13Entries       : [GlucoEntry]   = []
@@ -61,11 +48,8 @@ public class SugrModel: ObservableObject {
                 
                 self.currentEntry = entry
                 self.lastEntry    = lastEntry
-                
-                Properties.instance.value     = entry.sgv
-                Properties.instance.date      = entry.date
-                Properties.instance.direction = entry.direction
-                Properties.instance.delta     = entry.sgv - lastEntry.sgv
+
+                Helper.storeEntriesToSharedUserDefaults(entries: [entry, lastEntry] )                                
                 
                 if last288Entries.count > 12 {
                     self.last13Entries.removeAll()
@@ -85,9 +69,7 @@ public class SugrModel: ObservableObject {
                         let avg : Double = Helper.getAverageForDay(entries: self.last8640Entries, day: day)
                         averagesLast30Days.append(avg)
                     }
-                }
-                                
-                WidgetCenter.shared.reloadAllTimelines()
+                }                 
             }
         }
     }
@@ -114,7 +96,7 @@ public class SugrModel: ObservableObject {
     
 
     init(glucoseUpdate: Double? = 0.0, glucoseValue: Double? = 0.0) {
-        self.date = glucoseUpdate!
-        self.value  = glucoseValue!
+        self.date  = glucoseUpdate!
+        self.value = glucoseValue!
     }
 }

@@ -40,14 +40,12 @@ struct SugrApp: App {
                     let entry     : GlucoEntry = entries[0]
                     let lastEntry : GlucoEntry = entries[1]
                     
-                    Properties.instance.value     = entry.sgv
-                    Properties.instance.date      = entry.date
-                    Properties.instance.direction = entry.direction
-                    Properties.instance.delta     = entry.sgv - lastEntry.sgv
+                    Helper.storeEntriesToSharedUserDefaults(entries: [entry, lastEntry])
+                    //WidgetCenter.shared.reloadTimelines(ofKind: Constants.WIDGET_KIND)
+                    WidgetCenter.shared.reloadAllTimelines()
                     
                     await MainActor.run {
                         self.model.last288Entries = entries
-                        WidgetCenter.shared.reloadAllTimelines()
                         debugPrint("App refresh in background successful")
                     }
                 } else {
@@ -65,6 +63,8 @@ struct SugrApp: App {
         request.earliestBeginDate = now.addingTimeInterval(Constants.APP_REFRESH_INTERVAL)
         try? BGTaskScheduler.shared.submit(request)
         debugPrint("Scheduled App refresh")
+        // Set breakpoint here and then, after stop, paste line below in debugger and continue the exectuion
+        // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"eu.hansolo.Sugr.refresh"]
     }
     
     func fetchEntries(taskId: String) async -> [GlucoEntry] {
@@ -76,7 +76,7 @@ struct SugrApp: App {
         
         if url.isEmpty { return [] }
         
-        let sessionConfig : URLSessionConfiguration = URLSessionConfiguration.default
+        let sessionConfig : URLSessionConfiguration = URLSessionConfiguration.default // URLSessionConfiguration.background(withIdentifier: Constants.APP_REFRESH_ID)// URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest  = 30.0
         sessionConfig.timeoutIntervalForResource = 30.0
         sessionConfig.isDiscretionary            = false
