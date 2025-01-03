@@ -56,6 +56,7 @@ public class Constants {
     public static let DEFAULT_MAX_CRITICAL_FACTOR_MG_DL   : Double = 1.0 - DEFAULT_MAX_CRITICAL_MG_DL   / DEFAULT_GLUCO_RANGE_MG_DL
     
     public static let DARK_GRAY                           : Color  = Color(red: 0.156, green: 0.137, blue: 0.149, opacity: 1.00)
+    public static let BLACK                               : Color  = Color.black
     public static let WHITE                               : Color  = Color.white
     public static let GRAY                                : Color  = Color.gray
     public static let RED                                 : Color  = Color(red: 0.96, green: 0.12, blue: 0.14, opacity: 1.00)
@@ -67,6 +68,7 @@ public class Constants {
     public static let BLUE                                : Color  = Color(red: 0.00, green: 0.43, blue: 1.00, opacity: 1.00)
         
     public static let GC_DARK_GRAY                        : GraphicsContext.Shading = GraphicsContext.Shading.color(DARK_GRAY)
+    public static let GC_BLACK                            : GraphicsContext.Shading = GraphicsContext.Shading.color(BLACK)
     public static let GC_WHITE                            : GraphicsContext.Shading = GraphicsContext.Shading.color(WHITE)
     public static let GC_GRAY                             : GraphicsContext.Shading = GraphicsContext.Shading.color(GRAY)
     public static let GC_RED                              : GraphicsContext.Shading = GraphicsContext.Shading.color(RED)
@@ -76,6 +78,8 @@ public class Constants {
     public static let GC_DARK_GREEN                       : GraphicsContext.Shading = GraphicsContext.Shading.color(DARK_GREEN)
     public static let GC_LIGHT_BLUE                       : GraphicsContext.Shading = GraphicsContext.Shading.color(LIGHT_BLUE)
     public static let GC_BLUE                             : GraphicsContext.Shading = GraphicsContext.Shading.color(BLUE)
+    public static let GC_NIGHT_DARK                       : GraphicsContext.Shading = GraphicsContext.Shading.color(.black.opacity(0.25))
+    public static let GC_NIGHT_BRIGHT                     : GraphicsContext.Shading = GraphicsContext.Shading.color(.gray.opacity(0.15))
     
     public static let GC_GREEN_AREA_COLOR                 : GraphicsContext.Shading = GraphicsContext.Shading.color(Color(red: 0.177, green: 0.76, blue: 0.0, opacity: 0.2))
     
@@ -221,7 +225,33 @@ public class Constants {
             case .LAST_6_HOURS   : return 21600
             case .LAST_3_HOURS   : return 10800
             }
-        }        
+        }
+        var tickLabelDistance : Int {
+            switch self {
+            case .LAST_720_HOURS : return 30
+            case .LAST_336_HOURS : return 30
+            case .LAST_168_HOURS : return 30
+            case .LAST_72_HOURS  : return 30
+            case .LAST_48_HOURS  : return 30
+            case .LAST_24_HOURS  : return 30
+            case .LAST_12_HOURS  : return 20
+            case .LAST_6_HOURS   : return 10
+            case .LAST_3_HOURS   : return 5
+            }
+        }
+        var text : String {
+            switch self {
+            case .LAST_720_HOURS : return "30 Days"
+            case .LAST_336_HOURS : return "14 Days"
+            case .LAST_168_HOURS : return "7 Days"
+            case .LAST_72_HOURS  : return "3 Days"
+            case .LAST_48_HOURS  : return "48 Hours"
+            case .LAST_24_HOURS  : return "24 Hours"
+            case .LAST_12_HOURS  : return "12 Hours"
+            case .LAST_6_HOURS   : return "6 Hours"
+            case .LAST_3_HOURS   : return "3 Hours"
+            }
+        }
     }
     
     public enum GlucoseColor: String, Equatable, CaseIterable {

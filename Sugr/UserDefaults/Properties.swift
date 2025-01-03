@@ -30,6 +30,9 @@ extension Key {
     static let last13EntriesUpdate      : Key = "last13EntriesUpdate"
     static let last288EntriesUpdate     : Key = "last288EntriesUpdate"
     static let last30DaysUpdate         : Key = "last30DaysUpdate"
+    
+    static let nightBeginOffset         : Key = "nightBeginOffset"
+    static let nightEndOffset           : Key = "nightEndOffset"
 }
 
 
@@ -85,6 +88,12 @@ public struct Properties {
     
     @UserDefault(key: .last30DaysUpdate, defaultValue: 0.0)
     var last30DaysUpdate: Double?
+    
+    @UserDefault(key: .nightBeginOffset, defaultValue: 14400) // Offset in seconds from midnight: 20h -> -4h -> 14400
+    var nightBeginOffset: Double?
+    
+    @UserDefault(key: .nightEndOffset, defaultValue: 21600) // Offset in seconds from midnight: 6H -> 21600
+    var nightEndOffset: Double?
 
     private init() {}
 }

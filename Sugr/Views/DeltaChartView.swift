@@ -33,10 +33,10 @@ struct DeltaChartView: View {
                 let barWidth      : Double  = 10
                                 
                 var deltas : [(Double, Double)] = []
-                if !self.model.last13Entries.isEmpty {
-                    for index in 1 ..< self.model.last13Entries.count {
-                        let lastEntry : GlucoEntry = self.model.last13Entries[index - 1]
-                        let entry     : GlucoEntry = self.model.last13Entries[index]
+                if !self.model.last288Entries.isEmpty {
+                    for index in 1 ..< self.model.last288Entries.count {
+                        let lastEntry : GlucoEntry = self.model.last288Entries[index - 1]
+                        let entry     : GlucoEntry = self.model.last288Entries[index]
                         let delta     : Double     = unitMgDl ? (entry.sgv  - lastEntry.sgv) : Helper.mgToMmol(mgPerDl: (entry.sgv - lastEntry.sgv))
                         let date      : Double     = (entry.date - lastEntry.date) * 0.5
                         deltas.append((date, delta))
@@ -46,9 +46,9 @@ struct DeltaChartView: View {
                 let maxDelta : Double  = max(abs(deltas.min(by: { $0.1 < $1.1 })?.1 ?? 0), abs(deltas.max(by: { $0.1 < $1.1 })?.1 ?? 0))
                 let scaleY   : Double  = ((chartHeight - deltaFontSize * 3) / maxDelta) * 0.5
                 
-                if !self.model.last13Entries.isEmpty {
+                if !self.model.last288Entries.isEmpty {
                     let now          : Double = Date.now.timeIntervalSince1970
-                    let visibleRange : Double = 3600 // Visible range in seconds (3600 -> 1h)
+                    let visibleRange : Double = 86400 // Visible range in seconds (86400 -> 24h)
                     let minDate      : Double = now - visibleRange
                     let maxDate      : Double = now
                     let scaleX       : Double = chartWidth / (maxDate - minDate)
@@ -58,9 +58,9 @@ struct DeltaChartView: View {
                     xAxis.addLine(to: CGPoint(x: chartOffset + chartWidth, y: chartOffset + centerY))
                     ctx.stroke(xAxis, with: darkMode ? Constants.GC_WHITE : Constants.GC_GRAY)
                     
-                    for n in 1..<self.model.last13Entries.count {
-                        let lastEntry : GlucoEntry = self.model.last13Entries[n - 1]
-                        let entry     : GlucoEntry = self.model.last13Entries[n]
+                    for n in 1..<self.model.last288Entries.count {
+                        let lastEntry : GlucoEntry = self.model.last288Entries[n - 1]
+                        let entry     : GlucoEntry = self.model.last288Entries[n]
                         let delta     : Double     = unitMgDl ? (entry.sgv  - lastEntry.sgv) : Helper.mgToMmol(mgPerDl: (entry.sgv - lastEntry.sgv))
                         let barDate   : Double     = (entry.date - lastEntry.date) * 0.5
                         var x         : Double     = chartOffset + (entry.date - minDate - barDate) * scaleX

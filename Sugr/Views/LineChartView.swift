@@ -13,7 +13,9 @@ struct LineChartView: View {
     @Environment(\.colorScheme)  var colorScheme
     @EnvironmentObject           var model : SugrModel
     
+    
     private let dateFormatter : DateFormatter = DateFormatter()
+    private let calendar      : Calendar      = Calendar.current
     
     
     var body: some View {
@@ -27,26 +29,44 @@ struct LineChartView: View {
                 let chartWidth     : Double = width - (2 * chartOffset)
                 let chartHeight    : Double = height - (2 * chartOffset)
                 let fgdColor       : Color  = .primary
-                let scaleXFontSize : Double = width * 0.032
+                let scaleXFontSize : Double = height * 0.032
                 let scaleXFont     : Font   = Font.system(size: scaleXFontSize, weight: .regular, design: .rounded)
-                let valueFontSize  : Double = width * 0.03
+                let valueFontSize  : Double = height * 0.03
                 let valueFont      : Font   = Font.system(size: valueFontSize, weight: .regular, design: .rounded)
                 
                 // Set dateformatter to short format for the xAxis tickmarks
                 dateFormatter.dateFormat = unitMgDl ? Constants.TF_MG_DL_SHORT : Constants.TF_MMOL_L_SHORT
                 
-                if !self.model.last13Entries.isEmpty {
+                if !self.model.last288Entries.isEmpty {
                     let now          : Double = Date.now.timeIntervalSince1970
-                    let visibleRange : Double = 3600 // Visible range in seconds (3600 -> 1h)
+                    let visibleRange : Double = 86400 // Visible range in seconds (86400 -> 24h)
                     let minDate      : Double = now - visibleRange
                     let maxDate      : Double = now
                     let scaleX       : Double = chartWidth / (maxDate - minDate)
-                    let tickStepX    : Double = chartWidth / 12
+                    let tickStepX    : Double = chartWidth / 288
                     let topY         : Double = chartOffset + scaleXFontSize * 2
                     let bottomY      : Double = chartOffset + chartHeight - scaleXFontSize * 2
                     let deltaY       : Double = bottomY - topY
                     let scaleY       : Double = deltaY / Constants.DEFAULT_MAX_VALUE_MG_DL
                     let dotRadius    : Double = 0.011981402 * chartHeight
+                    let nightStart   : Double = Properties.instance.nightBeginOffset!
+                    let nightEnd     : Double = Properties.instance.nightEndOffset!
+                    
+                    
+                    // Nights
+                    var midnights : Set<Double> = Set()
+                    let firstMidnight : Double = calendar.startOfDay(for: Date(timeIntervalSince1970: minDate)).timeIntervalSince1970
+                    midnights.insert(firstMidnight)
+                    midnights.insert(firstMidnight + Constants.SECONDS_PER_DAY)
+                    midnights.insert(firstMidnight + Constants.SECONDS_PER_DAY * 2)                    
+                    
+                    for midnight in midnights {
+                        let nightRectX : Double = chartOffset + (midnight - nightStart - minDate) * scaleX
+                        let nightRectW : Double = (nightStart + nightEnd) * scaleX
+                        var night : Path = Path()
+                        night.addRect(CGRect(x: nightRectX, y: topY, width: nightRectW, height: bottomY - topY))
+                        ctx.fill(night, with: darkMode ? Constants.GC_NIGHT_DARK : Constants.GC_NIGHT_BRIGHT)
+                    }
                     
                     // Draw the top xAxis
                     var topXAxis : Path = Path()
@@ -61,9 +81,9 @@ struct LineChartView: View {
                     ctx.stroke(bottomXAxis, with: darkMode ? Constants.GC_WHITE : Constants.GC_GRAY)
                     
                     var toggle : Bool = false
-                    
+                                                            
                     // Draw the tickmarks and labels
-                    for n in 0..<13 {
+                    for n in 0..<289 {
                         let x          : Double = chartOffset + Double(n) * tickStepX
                         var topTick    : Path   = Path()
                         topTick.move(to: CGPoint(x: x, y: chartOffset + scaleXFontSize * 1.4))
@@ -111,20 +131,20 @@ struct LineChartView: View {
                     
                     // Draw chart line
                     var chartLine : Path = Path()
-                    for entry in self.model.last13Entries {
+                    for entry in self.model.last288Entries {
                         var x = chartOffset + (entry.date - minDate) * scaleX - dotRadius
                         let y = bottomY - entry.sgv * scaleY - dotRadius
                         x = Helper.clamp(min: chartOffset, max: chartOffset + chartWidth, value: x)
-                        if entry == self.model.last13Entries.first {
+                        if entry == self.model.last288Entries.first {
                             chartLine.move(to: CGPoint(x: x + dotRadius, y: y + dotRadius))
                         } else {
                             chartLine.addLine(to: CGPoint(x: x + dotRadius, y: y + dotRadius))
                         }
                     }
                     ctx.stroke(chartLine, with: darkMode ? Constants.GC_WHITE : Constants.GC_DARK_GRAY, lineWidth: 0.5)
-                    
+                                                            
                     // Draw dots on top of chart line
-                    for entry in self.model.last13Entries {
+                    for entry in self.model.last288Entries {
                         let x = chartOffset + (entry.date - minDate) * scaleX - dotRadius
                         let y = bottomY - entry.sgv * scaleY - dotRadius
                         if x > chartOffset {
@@ -137,8 +157,8 @@ struct LineChartView: View {
                             ctx.draw(valueText, at: CGPoint(x: x + dotRadius, y: entry.sgv > 350 ? y + valueFontSize + dotRadius * 2 : y - valueFontSize))
                         }
                     }
-                }
+                }                                
             }
-        }
+        }        
     }
 }

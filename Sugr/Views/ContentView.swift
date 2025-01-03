@@ -15,7 +15,10 @@ struct ContentView: View {
     @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject          private var model : SugrModel
     
-    @State var settingsViewVisible : Bool = false
+    @State private var settingsViewVisible : Bool = false
+    @State private var rangeViewVisible    : Bool = false
+    @State private var scrollPosition      : ScrollPosition = ScrollPosition()
+    
     
     // Timer will be triggered every 30 sec to check if update is needed
     let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
@@ -37,14 +40,25 @@ struct ContentView: View {
                         AverageView()
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.044)
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: -5, trailing: 0))
-                        DeltaChartView()
-                            .frame(width: geometry.size.width, height: geometry.size.height * 0.18)
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: -5, trailing: 0))
-                        LineChartView()
-                            .frame(width: geometry.size.width, height: geometry.size.height * 0.4)
-                    }                    
+                        ScrollView(.horizontal) {
+                            DeltaChartView()
+                                .frame(width: geometry.size.width / 3600 * 86400, height: geometry.size.height * 0.18)
+                                .padding(EdgeInsets(top: 0, leading: 0, bottom: -5, trailing: 0))
+                            LineChartView()
+                                .frame(width: geometry.size.width / 3600 * 86400, height: geometry.size.height * 0.4)
+                        }
+                        .scrollPosition(self.$scrollPosition, anchor: .trailing)
+                    }
                     
                     HStack {
+                        Button(action: {
+                            self.rangeViewVisible = true
+                        }) {
+                            Image(systemName: "chart.xyaxis.line").imageScale(.large)
+                                .foregroundColor(.primary)
+                        }
+                        .buttonStyle(.plain)
+                        
                         Spacer()
                         
                         Button(action: {
@@ -54,7 +68,11 @@ struct ContentView: View {
                                 .foregroundColor(.primary)
                         }
                         .buttonStyle(.plain)
-                    }.padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
+                    }.padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                }
+                .scrollTargetLayout()
+                .sheet(isPresented: $rangeViewVisible) {
+                    RangeView(interval: Constants.Interval.LAST_24_HOURS)
                 }
                 .sheet(isPresented: $settingsViewVisible) {
                     SettingsView()
@@ -62,12 +80,13 @@ struct ContentView: View {
                 .onReceive(timer) { _ in
                     fetchLast288Entries(force: false)
                     fetchLast30Days()
-                }                
+                }
                 .onChange(of: phase) {
                     switch phase {
                         case .active     :
                             fetchLast288Entries(force: true)
                             fetchLast30Days()
+                        scrollPosition.scrollTo(edge: Edge.trailing)
                         case .inactive   : break
                         case .background : break
                         default          : break

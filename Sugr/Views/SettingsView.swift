@@ -30,6 +30,7 @@ struct SettingsView: View {
                         Button("Close") {
                             dismiss()
                         }
+                        .foregroundStyle(.primary)
                         .buttonStyle(.plain)
                     }
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
