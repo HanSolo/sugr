@@ -54,6 +54,14 @@ struct LineChartView: View {
                     
                     
                     // Nights
+                    /*
+                    if darkMode {
+                        var bkgRect : Path = Path()
+                        bkgRect.addRect(CGRect(x: chartOffset, y: topY, width: chartWidth, height: bottomY - topY))
+                        ctx.fill(bkgRect, with: Constants.GC_DARK_GRAY.darkened(by: 0.5))
+                    }
+                    */
+                    
                     var midnights : Set<Double> = Set()
                     let firstMidnight : Double = calendar.startOfDay(for: Date(timeIntervalSince1970: minDate)).timeIntervalSince1970
                     midnights.insert(firstMidnight)

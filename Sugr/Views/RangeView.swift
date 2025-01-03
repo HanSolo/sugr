@@ -213,6 +213,7 @@ struct RangeView: View {
             .padding()
         }
         .task {
+            self.interval = intervals.first!
             self.toggle.toggle()
         }
     }

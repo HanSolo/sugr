@@ -78,7 +78,7 @@ public class Constants {
     public static let GC_DARK_GREEN                       : GraphicsContext.Shading = GraphicsContext.Shading.color(DARK_GREEN)
     public static let GC_LIGHT_BLUE                       : GraphicsContext.Shading = GraphicsContext.Shading.color(LIGHT_BLUE)
     public static let GC_BLUE                             : GraphicsContext.Shading = GraphicsContext.Shading.color(BLUE)
-    public static let GC_NIGHT_DARK                       : GraphicsContext.Shading = GraphicsContext.Shading.color(.black.opacity(0.25))
+    public static let GC_NIGHT_DARK                       : GraphicsContext.Shading = GraphicsContext.Shading.color(Color(red: 0.122, green: 0.110, blue: 0.120, opacity: 1.0))
     public static let GC_NIGHT_BRIGHT                     : GraphicsContext.Shading = GraphicsContext.Shading.color(.gray.opacity(0.15))
     
     public static let GC_GREEN_AREA_COLOR                 : GraphicsContext.Shading = GraphicsContext.Shading.color(Color(red: 0.177, green: 0.76, blue: 0.0, opacity: 0.2))
